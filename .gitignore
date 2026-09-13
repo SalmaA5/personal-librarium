@@ -1,0 +1,45 @@
+# Dependencies
+node_modules
+.pnpm-store
+
+# Build outputs
+dist
+build
+out
+.angular
+
+# Nx
+.nx/cache
+.nx/workspace-data
+tmp
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea
+.vscode
+*.swp
+*.swo
+
+# Android / Capacitor
+apps/mobile/android
+apps/mobile/ios
+apps/mobile/.capacitor
+
+# Test coverage
+coverage
+
+# TypeScript
+*.tsbuildinfo

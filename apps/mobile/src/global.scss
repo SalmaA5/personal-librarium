@@ -1,4 +1,4 @@
-@import './theme/variables';
+@use './theme/variables';
 
 :root {
   --color-accent:         #386878;
@@ -9,5 +9,5 @@
   --color-bg-sidebar:     #121C24;
   --color-text-primary:   #D0E8F0;
   --color-text-secondary: #405868;
-  --color-border:         rgba(255,255,255,0.07);
+  --color-border:         rgba(255, 255, 255, 0.07);
 }

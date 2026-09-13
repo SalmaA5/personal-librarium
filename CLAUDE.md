@@ -50,6 +50,8 @@ libs/
 - **Branches**: `feature/<name>` off `main`; delete local + remote after merging the PR.
 - **Angular style**: standalone components everywhere, no NgModules in new code.
 - **No `APP_INITIALIZER`**: use `provideAppInitializer()` (Angular 19+).
+- **No e2e**: project has no e2e tests. Always use `--e2eTestRunner=none` when scaffolding. `nx.json` has `e2eTestRunner: "none"`.
+- **Solo Claude**: delete cualquier carpeta de otros agentes (`.cursor`, `.gemini`, `.codex`, `.opencode`, `.agents`) si aparecen. Solo se mantiene `.claude/`.
 
 ## Database — Drizzle ORM + Turso (libSQL)
 
@@ -63,20 +65,32 @@ Env vars: `TURSO_URL`, `TURSO_AUTH_TOKEN` (see `.env.example`).
 ## Theme system (`@librarium/utils`)
 
 - **4 themes**: `teal-light`, `teal-dark` (default), `mauve-light`, `mauve-dark`
-- `ThemeService` — Angular signal `currentTheme`, methods `setTheme(palette, mode)` and `followSystem()`
+- `ThemeService` — Angular signal `currentTheme`, methods `setTheme(palette, mode)` y `followSystem()`
 - Persists in `localStorage` key `librarium-theme`; falls back to `prefers-color-scheme`
-- Writes `--color-*` CSS vars and `--ion-*` Ionic vars to `:root` simultaneously
+- Writes `--color-*` CSS vars y `--ion-*` Ionic vars to `:root` simultaneously
 - `initTheme()` registered via `provideAppInitializer()` in `apps/web` to avoid FOUC
 - `apps/web/src/styles.scss`: default vars → PrimeNG token overrides (`--p-*`) → primeicons import
+- `libs/shared/utils/tsconfig.lib.json` needs `"lib": ["es2022", "dom"]` (ThemeService uses DOM APIs)
 
 ## PrimeNG (web only)
 
-- Version 22 with Aura preset from `@primeuix/themes/aura`
-- Configured in `apps/web/src/app/app.config.ts` with `providePrimeNG` + `provideAnimationsAsync`
-- `darkModeSelector: 'none'` — theme is fully controlled by ThemeService via CSS variables
-- PrimeNG tokens (`--p-primary-color`, etc.) cascade from `--color-*` vars in `styles.scss`
+- Version 22 con Aura preset desde `@primeuix/themes/aura` (NO usar `@primeng/themes`, está deprecado)
+- Configured in `apps/web/src/app/app.config.ts` con `providePrimeNG` + `provideAnimationsAsync`
+- `darkModeSelector: 'none'` — tema controlado al 100% por ThemeService vía CSS variables
+- PrimeNG tokens (`--p-primary-color`, etc.) cascade desde `--color-*` vars in `styles.scss`
 
-## NestJS modules (all empty scaffolds, ready to implement)
+## NestJS modules (scaffolds vacíos, listos para implementar)
 
 `books`, `collections`, `reader`, `progress`, `drive`, `import`, `metadata`, `stats`
-Each has `module.ts`, `controller.ts`, `service.ts` under `apps/api/src/<name>/`.
+Cada uno tiene `module.ts`, `controller.ts`, `service.ts` en `apps/api/src/<name>/`.
+Los controllers no inyectan el servicio en el constructor hasta que se implementen rutas (`noUnusedLocals: true`).
+
+## CI (`github/workflows/ci.yml`)
+
+- Runner: `ubuntu-latest`, Node 24, pnpm 12
+- Steps: `pnpm install --frozen-lockfile` → `nx format:check` → `nx run-many -t lint build typecheck --parallel=3`
+- Sin Nx Cloud, sin e2e
+- Tsconfig gotchas resueltos:
+  - Angular libs: `tsconfig.lib.json` necesita `"sourceMap": true` junto a `"inlineSources": true`
+  - Angular libs `tsconfig.spec.json`: incluir `"src/**/*.ts"` además de los spec files (TS6307)
+  - `libs/shared/utils/tsconfig.lib.json`: necesita `"lib": ["es2022", "dom"]` para DOM APIs

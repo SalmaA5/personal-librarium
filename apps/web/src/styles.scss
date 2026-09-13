@@ -1,0 +1,29 @@
+/* 1 — Default theme tokens (TEAL_DARK). ThemeService overwrites these at runtime. */
+:root {
+  --color-accent:         #386878;
+  --color-accent-sec:     #5898B0;
+  --color-accent-soft:    #223540;
+  --color-bg-page:        #0E161C;
+  --color-bg-card:        #1A2830;
+  --color-bg-sidebar:     #121C24;
+  --color-text-primary:   #D0E8F0;
+  --color-text-secondary: #405868;
+  --color-border:         rgba(255, 255, 255, 0.07);
+}
+
+/* 2 — PrimeNG design-token overrides. Cascade from --color-* so every
+        ThemeService change propagates to PrimeNG components automatically. */
+:root {
+  --p-primary-color:        var(--color-accent);
+  --p-primary-contrast-color: var(--color-text-primary);
+  --p-surface-0:            var(--color-bg-page);
+  --p-surface-card:         var(--color-bg-card);
+  --p-text-color:           var(--color-text-primary);
+  --p-text-muted-color:     var(--color-text-secondary);
+  --p-content-border-color: var(--color-border);
+  --p-highlight-bg:         var(--color-accent-soft);
+  --p-highlight-color:      var(--color-accent);
+}
+
+/* 3 — Icon font */
+@import 'primeicons/primeicons.css';

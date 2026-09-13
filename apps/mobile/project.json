@@ -1,0 +1,20 @@
+{
+  "name": "mobile",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/mobile/src",
+  "targets": {
+    "build": {
+      "executor": "@nx/angular:application",
+      "options": {
+        "outputPath": "dist/apps/mobile",
+        "index": "apps/mobile/src/index.html",
+        "browser": "apps/mobile/src/main.ts",
+        "tsConfig": "apps/mobile/tsconfig.app.json",
+        "assets": ["apps/mobile/src/assets"],
+        "styles": ["apps/mobile/src/global.scss"],
+        "scripts": []
+      }
+    }
+  }
+}

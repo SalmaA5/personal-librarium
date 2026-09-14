@@ -4,19 +4,25 @@
   "files": [],
   "references": [
     {
-      "path": "./apps/api-e2e"
-    },
-    {
       "path": "./apps/api"
-    },
-    {
-      "path": "./apps/web-e2e"
     },
     {
       "path": "./libs/shared/types"
     },
     {
       "path": "./libs/shared/utils"
+    },
+    {
+      "path": "./libs/shared/api-client"
+    },
+    {
+      "path": "./libs/ui/shared"
+    },
+    {
+      "path": "./libs/ui/mobile"
+    },
+    {
+      "path": "./libs/ui/web"
     }
   ],
   "compilerOptions": {}

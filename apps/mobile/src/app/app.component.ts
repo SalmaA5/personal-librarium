@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
+import { IonApp, IonRouterOutlet } from '@ionic/angular';
 import { ThemeService } from '@librarium/utils';
 
 @Component({
@@ -9,5 +9,7 @@ import { ThemeService } from '@librarium/utils';
   template: `<ion-app><ion-router-outlet /></ion-app>`,
 })
 export class AppComponent {
-  private readonly _theme = inject(ThemeService);
+  constructor() {
+    inject(ThemeService);
+  }
 }

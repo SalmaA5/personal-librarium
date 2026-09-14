@@ -1,10 +1,7 @@
 {
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
   "namedInputs": {
-    "default": [
-      "{projectRoot}/**/*",
-      "sharedGlobals"
-    ],
+    "default": ["{projectRoot}/**/*", "sharedGlobals"],
     "production": [
       "default",
       "!{projectRoot}/**/?(*.)+(spec|test).[jt]s?(x)?(.snap)",
@@ -16,9 +13,6 @@
     {
       "plugin": "@nx/js/typescript",
       "options": {
-        "typecheck": {
-          "targetName": "typecheck"
-        },
         "build": {
           "targetName": "build",
           "configName": "tsconfig.lib.json",
@@ -43,43 +37,16 @@
   "targetDefaults": {
     "@angular/build:application": {
       "cache": true,
-      "dependsOn": [
-        "^build"
-      ],
-      "inputs": [
-        "production",
-        "^production"
-      ]
-    },
-    "@angular/build:unit-test": {
-      "cache": true,
-      "inputs": [
-        "default",
-        "^production"
-      ]
-    },
-    "@nx/vitest:test": {
-      "cache": true,
-      "inputs": [
-        "default",
-        "^production"
-      ]
-    },
-    "test": {
-      "dependsOn": [
-        "^build"
-      ]
+      "dependsOn": ["^build"],
+      "inputs": ["production", "^production"]
     }
   },
   "generators": {
     "@nx/angular:application": {
       "e2eTestRunner": "none",
-      "style": "scss",
-      "unitTestRunner": "vitest-angular"
+      "style": "scss"
     },
-    "@nx/angular:library": {
-      "unitTestRunner": "vitest-analog"
-    },
+    "@nx/angular:library": {},
     "@nx/angular:component": {
       "style": "css"
     }

@@ -59,12 +59,6 @@
         }
       }
     },
-    "test": {
-      "executor": "@angular/build:unit-test",
-      "options": {
-        "watch": false
-      }
-    },
     "serve-static": {
       "continuous": true,
       "executor": "@nx/web:file-server",

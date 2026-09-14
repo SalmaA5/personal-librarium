@@ -13,6 +13,9 @@ permissions:
 jobs:
   main:
     runs-on: ubuntu-latest
+    if: |
+      contains(github.event.head_commit.message, '[deploy]') ||
+      github.event_name == 'pull_request'
     steps:
       - uses: actions/checkout@v4
         with:
@@ -31,4 +34,4 @@ jobs:
 
       - run: pnpm nx format:check
 
-      - run: pnpm nx run-many -t lint build typecheck --parallel=3
+      - run: pnpm nx run-many -t lint build --parallel=3

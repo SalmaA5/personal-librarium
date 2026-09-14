@@ -88,9 +88,12 @@ Los controllers no inyectan el servicio en el constructor hasta que se implement
 ## CI (`github/workflows/ci.yml`)
 
 - Runner: `ubuntu-latest`, Node 24, pnpm 12
-- Steps: `pnpm install --frozen-lockfile` → `nx format:check` → `nx run-many -t lint build typecheck --parallel=3`
-- Sin Nx Cloud, sin e2e
+- Steps: `pnpm install --frozen-lockfile` → `nx format:check` → `nx run-many -t lint build --parallel=3`
+- Sin Nx Cloud, sin e2e, sin tests unitarios
+- **Trigger**: solo corre en push a `main` si el commit message contiene `[deploy]`; siempre corre en pull requests
 - Tsconfig gotchas resueltos:
-  - Angular libs: `tsconfig.lib.json` necesita `"sourceMap": true` junto a `"inlineSources": true`
-  - Angular libs `tsconfig.spec.json`: incluir `"src/**/*.ts"` además de los spec files (TS6307)
-  - `libs/shared/utils/tsconfig.lib.json`: necesita `"lib": ["es2022", "dom"]` para DOM APIs
+  - `tsconfig.base.json` hereda `composite:true` y `emitDeclarationOnly:true` — las apps deben sobreescribir con `false`
+  - Apps Angular necesitan `"lib": ["es2022", "dom"]` y `"moduleResolution": "bundler"`, `"module": "preserve"`
+  - `apps/mobile/tsconfig.app.json`: usar `include: ["src/**/*.ts"]` (no `files: ["src/main.ts"]`) para evitar TS6307
+  - `@ionic/angular` v9: importar desde `@ionic/angular` directamente, no desde `@ionic/angular/standalone`
+  - `@angular/animations` es dependencia requerida (PrimeNG + `provideAnimationsAsync`)

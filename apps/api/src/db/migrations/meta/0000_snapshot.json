@@ -192,12 +192,8 @@
           "name": "book_author_book_id_book_id_fk",
           "tableFrom": "book_author",
           "tableTo": "book",
-          "columnsFrom": [
-            "book_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["book_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -205,22 +201,15 @@
           "name": "book_author_author_id_author_id_fk",
           "tableFrom": "book_author",
           "tableTo": "author",
-          "columnsFrom": [
-            "author_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["author_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {
         "book_author_book_id_author_id_pk": {
-          "columns": [
-            "book_id",
-            "author_id"
-          ],
+          "columns": ["book_id", "author_id"],
           "name": "book_author_book_id_author_id_pk"
         }
       },
@@ -258,12 +247,8 @@
           "name": "book_collection_book_id_book_id_fk",
           "tableFrom": "book_collection",
           "tableTo": "book",
-          "columnsFrom": [
-            "book_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["book_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -271,22 +256,15 @@
           "name": "book_collection_collection_id_collection_id_fk",
           "tableFrom": "book_collection",
           "tableTo": "collection",
-          "columnsFrom": [
-            "collection_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["collection_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {
         "book_collection_book_id_collection_id_pk": {
-          "columns": [
-            "book_id",
-            "collection_id"
-          ],
+          "columns": ["book_id", "collection_id"],
           "name": "book_collection_book_id_collection_id_pk"
         }
       },
@@ -317,12 +295,8 @@
           "name": "book_genre_book_id_book_id_fk",
           "tableFrom": "book_genre",
           "tableTo": "book",
-          "columnsFrom": [
-            "book_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["book_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -330,22 +304,15 @@
           "name": "book_genre_genre_id_genre_id_fk",
           "tableFrom": "book_genre",
           "tableTo": "genre",
-          "columnsFrom": [
-            "genre_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["genre_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {
         "book_genre_book_id_genre_id_pk": {
-          "columns": [
-            "book_id",
-            "genre_id"
-          ],
+          "columns": ["book_id", "genre_id"],
           "name": "book_genre_book_id_genre_id_pk"
         }
       },
@@ -376,12 +343,8 @@
           "name": "book_tag_book_id_book_id_fk",
           "tableFrom": "book_tag",
           "tableTo": "book",
-          "columnsFrom": [
-            "book_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["book_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -389,22 +352,15 @@
           "name": "book_tag_tag_id_tag_id_fk",
           "tableFrom": "book_tag",
           "tableTo": "tag",
-          "columnsFrom": [
-            "tag_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["tag_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {
         "book_tag_book_id_tag_id_pk": {
-          "columns": [
-            "book_id",
-            "tag_id"
-          ],
+          "columns": ["book_id", "tag_id"],
           "name": "book_tag_book_id_tag_id_pk"
         }
       },
@@ -533,12 +489,8 @@
           "name": "reading_progress_book_id_book_id_fk",
           "tableFrom": "reading_progress",
           "tableTo": "book",
-          "columnsFrom": [
-            "book_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["book_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -578,12 +530,8 @@
           "name": "related_book_book_id_book_id_fk",
           "tableFrom": "related_book",
           "tableTo": "book",
-          "columnsFrom": [
-            "book_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["book_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -591,22 +539,15 @@
           "name": "related_book_related_book_id_book_id_fk",
           "tableFrom": "related_book",
           "tableTo": "book",
-          "columnsFrom": [
-            "related_book_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["related_book_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {
         "related_book_book_id_related_book_id_pk": {
-          "columns": [
-            "book_id",
-            "related_book_id"
-          ],
+          "columns": ["book_id", "related_book_id"],
           "name": "related_book_book_id_related_book_id_pk"
         }
       },

@@ -14,8 +14,12 @@ export class ReaderController {
   constructor(private readonly readerService: ReaderService) {}
 
   @Get('read')
-  @ApiOperation({ summary: 'Get read content — returns HTML string or stream descriptor' })
-  @ApiOkResponse({ description: '{ type: "html", content } or { type: "stream", driveFileId }' })
+  @ApiOperation({
+    summary: 'Get read content — returns HTML string or stream descriptor',
+  })
+  @ApiOkResponse({
+    description: '{ type: "html", content } or { type: "stream", driveFileId }',
+  })
   @ApiNotFoundResponse({ description: 'Book not found' })
   getReadContent(@Param('bookId', ParseIntPipe) bookId: number) {
     return this.readerService.getReadContent(bookId);
@@ -23,7 +27,9 @@ export class ReaderController {
 
   @Get('read/stream')
   @ApiOperation({ summary: 'Stream book file directly from Google Drive' })
-  @ApiNotFoundResponse({ description: 'Book not found or no Drive file attached' })
+  @ApiNotFoundResponse({
+    description: 'Book not found or no Drive file attached',
+  })
   streamBook(
     @Param('bookId', ParseIntPipe) bookId: number,
     @Res() res: Response,

@@ -1,4 +1,11 @@
-import { Body, Controller, Get, Param, ParseIntPipe, Patch } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseIntPipe,
+  Patch,
+} from '@nestjs/common';
 import {
   ApiNotFoundResponse,
   ApiOkResponse,
@@ -15,7 +22,9 @@ export class ProgressController {
 
   @Get()
   @ApiOperation({ summary: 'Get reading progress for a book' })
-  @ApiOkResponse({ description: 'Progress record (percentage: 0 if none exists)' })
+  @ApiOkResponse({
+    description: 'Progress record (percentage: 0 if none exists)',
+  })
   findOne(@Param('bookId', ParseIntPipe) bookId: number) {
     return this.progressService.findOne(bookId);
   }

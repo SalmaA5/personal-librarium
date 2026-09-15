@@ -10,10 +10,7 @@ interface GaxiosError {
 
 function isAuthError(err: unknown): err is GaxiosError {
   const e = err as GaxiosError;
-  return (
-    e?.status === 401 ||
-    e?.response?.data?.error === 'invalid_grant'
-  );
+  return e?.status === 401 || e?.response?.data?.error === 'invalid_grant';
 }
 
 const BOOK_MIMETYPES = [
@@ -30,7 +27,10 @@ export class DriveService {
   private readonly drive: ReturnType<typeof google.drive>;
 
   constructor(private readonly authService: AuthService) {
-    this.drive = google.drive({ version: 'v3', auth: authService.oauth2Client });
+    this.drive = google.drive({
+      version: 'v3',
+      auth: authService.oauth2Client,
+    });
   }
 
   private async run<T>(fn: () => Promise<T>): Promise<T> {

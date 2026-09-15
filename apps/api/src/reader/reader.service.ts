@@ -38,10 +38,14 @@ export class ReaderService {
 
     if (found.format === 'html' && found.fileStatus === 'cached') {
       if (!found.cachedPath) {
-        throw new NotFoundException(`Book ${bookId} is cached but cachedPath is missing`);
+        throw new NotFoundException(
+          `Book ${bookId} is cached but cachedPath is missing`,
+        );
       }
       const content = fs.readFileSync(
-        found.cachedPath.startsWith('/') ? found.cachedPath : process.cwd() + found.cachedPath,
+        found.cachedPath.startsWith('/')
+          ? found.cachedPath
+          : process.cwd() + found.cachedPath,
         'utf-8',
       );
       return { type: 'html' as const, content };
@@ -70,7 +74,8 @@ export class ReaderService {
       throw new NotFoundException(`Book ${bookId} has no Drive file attached`);
     }
 
-    const contentType = FORMAT_CONTENT_TYPE[found.format] ?? 'application/octet-stream';
+    const contentType =
+      FORMAT_CONTENT_TYPE[found.format] ?? 'application/octet-stream';
 
     res.setHeader('Content-Type', contentType);
     res.setHeader('Accept-Ranges', 'bytes');

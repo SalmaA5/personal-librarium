@@ -15,7 +15,8 @@ const HTML_DIR = path.resolve(process.cwd(), 'uploads', 'html');
 const MIME_TO_FORMAT: Record<string, 'epub' | 'pdf' | 'html' | 'cbz'> = {
   'application/epub+zip': 'epub',
   'application/pdf': 'pdf',
-  'application/vnd.openxmlformats-officedocument.wordprocessingml.document': 'html',
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+    'html',
   'application/x-cbz': 'cbz',
 };
 
@@ -131,15 +132,20 @@ export class ImportService {
     const zip = await JSZip.loadAsync(buffer);
 
     // locate OPF
-    const containerXml = await zip.file('META-INF/container.xml')?.async('string');
+    const containerXml = await zip
+      .file('META-INF/container.xml')
+      ?.async('string');
     const opfPath = containerXml?.match(/full-path="([^"]+\.opf)"/)?.[1];
-    const opfContent = opfPath ? await zip.file(opfPath)?.async('string') : null;
+    const opfContent = opfPath
+      ? await zip.file(opfPath)?.async('string')
+      : null;
 
-    const title = opfContent?.match(/<dc:title[^>]*>([^<]+)<\/dc:title>/)?.[1]?.trim() ?? '';
-    const authorsRaw = opfContent?.match(/<dc:creator[^>]*>([^<]+)<\/dc:creator>/g) ?? [];
-    const authors = authorsRaw.map(
-      (a) => a.replace(/<[^>]+>/g, '').trim(),
-    );
+    const title =
+      opfContent?.match(/<dc:title[^>]*>([^<]+)<\/dc:title>/)?.[1]?.trim() ??
+      '';
+    const authorsRaw =
+      opfContent?.match(/<dc:creator[^>]*>([^<]+)<\/dc:creator>/g) ?? [];
+    const authors = authorsRaw.map((a) => a.replace(/<[^>]+>/g, '').trim());
 
     // cover image
     const coverId = opfContent?.match(/name="cover"\s+content="([^"]+)"/)?.[1];
@@ -149,7 +155,9 @@ export class ImportService {
 
     let coverBuffer: Buffer | null = null;
     if (coverHref && opfPath) {
-      const opfDir = opfPath.includes('/') ? opfPath.substring(0, opfPath.lastIndexOf('/') + 1) : '';
+      const opfDir = opfPath.includes('/')
+        ? opfPath.substring(0, opfPath.lastIndexOf('/') + 1)
+        : '';
       const coverPath = opfDir + coverHref;
       const coverData = await zip.file(coverPath)?.async('nodebuffer');
       coverBuffer = coverData ?? null;
@@ -162,7 +170,8 @@ export class ImportService {
     const parser = new PDFParse({ data: buffer });
     const data = await parser.getInfo();
     await parser.destroy();
-    const title = (data.info?.Title as string | undefined)?.trim() || fallbackTitle;
+    const title =
+      (data.info?.Title as string | undefined)?.trim() || fallbackTitle;
     const authorRaw = (data.info?.Author as string | undefined)?.trim();
     const authors = authorRaw ? [authorRaw] : [];
     return { title, authors };
@@ -177,11 +186,16 @@ export class ImportService {
     const dest = path.join(COVERS_DIR, filename);
 
     if (coverBuffer) {
-      await sharp(coverBuffer).resize(300, 450, { fit: 'cover' }).jpeg({ quality: 85 }).toFile(dest);
+      await sharp(coverBuffer)
+        .resize(300, 450, { fit: 'cover' })
+        .jpeg({ quality: 85 })
+        .toFile(dest);
     } else {
       // solid-color placeholder with title text via SVG
-      const safeTitle = title.replace(/[<>&"]/g, (c) =>
-        ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;' })[c] ?? c,
+      const safeTitle = title.replace(
+        /[<>&"]/g,
+        (c) =>
+          ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;' })[c] ?? c,
       );
       const svg = Buffer.from(
         `<svg width="300" height="450" xmlns="http://www.w3.org/2000/svg">

@@ -33,8 +33,14 @@ export class CollectionsController {
 
   @Get()
   @ApiOperation({ summary: 'List all collections' })
-  @ApiQuery({ name: 'type', required: false, enum: ['series', 'anthology', 'thematic'] })
-  @ApiOkResponse({ description: 'List of collections with book count and cover thumbnails' })
+  @ApiQuery({
+    name: 'type',
+    required: false,
+    enum: ['series', 'anthology', 'thematic'],
+  })
+  @ApiOkResponse({
+    description: 'List of collections with book count and cover thumbnails',
+  })
   findAll(@Query('type') type?: string) {
     return this.collectionsService.findAll(type);
   }
@@ -75,7 +81,9 @@ export class CollectionsController {
   }
 
   @Post(':id/books')
-  @ApiOperation({ summary: 'Add a book to a collection (upserts order if already linked)' })
+  @ApiOperation({
+    summary: 'Add a book to a collection (upserts order if already linked)',
+  })
   @ApiOkResponse({ description: 'Book added or order updated' })
   @ApiNotFoundResponse({ description: 'Collection or book not found' })
   addBook(@Param('id', ParseIntPipe) id: number, @Body() dto: AddBookDto) {

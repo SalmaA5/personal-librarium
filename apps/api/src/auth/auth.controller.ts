@@ -15,7 +15,10 @@ export class AuthController {
   }
 
   @Get('google/callback')
-  async handleCallback(@Query('code') code: string, @Res() res: Response): Promise<void> {
+  async handleCallback(
+    @Query('code') code: string,
+    @Res() res: Response,
+  ): Promise<void> {
     if (!code) {
       res.status(400).send('Missing authorization code');
       return;

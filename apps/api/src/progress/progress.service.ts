@@ -48,7 +48,9 @@ export class ProgressService {
       const [updated] = await this.db
         .update(readingProgress)
         .set({
-          ...(dto.currentPage !== undefined && { currentPage: dto.currentPage }),
+          ...(dto.currentPage !== undefined && {
+            currentPage: dto.currentPage,
+          }),
           ...(dto.totalPages !== undefined && { totalPages: dto.totalPages }),
           ...(dto.epubCfi !== undefined && { epubCfi: dto.epubCfi }),
           ...(dto.percentage !== undefined && { percentage: dto.percentage }),

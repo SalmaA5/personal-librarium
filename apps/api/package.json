@@ -52,17 +52,23 @@
       },
       "build": {
         "executor": "@nx/esbuild:esbuild",
-        "outputs": ["{workspaceRoot}/dist/apps/api"],
+        "outputs": [
+          "{workspaceRoot}/dist/apps/api"
+        ],
         "defaultConfiguration": "production",
         "options": {
           "platform": "node",
           "outputPath": "dist/apps/api",
-          "format": ["cjs"],
+          "format": [
+            "cjs"
+          ],
           "bundle": true,
           "externalDependencies": "all",
           "main": "apps/api/src/main.ts",
           "tsConfig": "apps/api/tsconfig.app.json",
-          "assets": ["apps/api/src/assets"],
+          "assets": [
+            "apps/api/src/assets"
+          ],
           "generatePackageJson": false,
           "esbuildConfig": "apps/api/esbuild.config.js"
         },

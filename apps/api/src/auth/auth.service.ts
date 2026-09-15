@@ -46,7 +46,9 @@ export class AuthService implements OnModuleInit {
       this.oauth2Client.setCredentials({ refresh_token: envRefreshToken });
       this.logger.log('Google credentials loaded from env');
     } else {
-      this.logger.warn('No Google credentials found — visit /api/auth/google to authorize');
+      this.logger.warn(
+        'No Google credentials found — visit /api/auth/google to authorize',
+      );
     }
   }
 

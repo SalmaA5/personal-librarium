@@ -33,7 +33,7 @@ const DEFAULT_COVER = '/assets/default-cover.png';
 
 @Injectable()
 export class BooksService {
-  constructor(@Inject(DRIZZLE) private readonly db: DrizzleClient) { }
+  constructor(@Inject(DRIZZLE) private readonly db: DrizzleClient) {}
 
   async findAll(filters: BookFiltersDto) {
     const {
@@ -69,9 +69,7 @@ export class BooksService {
     }
 
     if (status)
-      conditions.push(
-        eq(book.status, status as 'unread' | 'reading' | 'read'),
-      );
+      conditions.push(eq(book.status, status as 'unread' | 'reading' | 'read'));
     if (format)
       conditions.push(
         eq(book.format, format as 'epub' | 'pdf' | 'html' | 'cbz'),
@@ -254,10 +252,7 @@ export class BooksService {
             order: bookCollection.order,
           })
           .from(bookCollection)
-          .innerJoin(
-            collection,
-            eq(collection.id, bookCollection.collectionId),
-          )
+          .innerJoin(collection, eq(collection.id, bookCollection.collectionId))
           .where(eq(bookCollection.bookId, id)),
         this.db
           .select({
@@ -279,7 +274,12 @@ export class BooksService {
   }
 
   async create(dto: CreateBookDto) {
-    const { authors: authorNames = [], genres: genreNames = [], tags: tagNames = [], ...bookData } = dto;
+    const {
+      authors: authorNames = [],
+      genres: genreNames = [],
+      tags: tagNames = [],
+      ...bookData
+    } = dto;
 
     return this.db.transaction(async (tx) => {
       const [newBook] = await tx
@@ -320,7 +320,12 @@ export class BooksService {
 
     if (!existing) throw new NotFoundException(`Book ${id} not found`);
 
-    const { authors: authorNames, genres: genreNames, tags: tagNames, ...bookData } = dto;
+    const {
+      authors: authorNames,
+      genres: genreNames,
+      tags: tagNames,
+      ...bookData
+    } = dto;
 
     return this.db.transaction(async (tx) => {
       const [updated] = await tx
@@ -382,7 +387,12 @@ export class BooksService {
       const authorId =
         existing.length > 0
           ? existing[0].id
-          : (await tx.insert(author).values({ name }).returning({ id: author.id }))[0].id;
+          : (
+              await tx
+                .insert(author)
+                .values({ name })
+                .returning({ id: author.id })
+            )[0].id;
       await tx.insert(bookAuthor).values({ bookId, authorId });
     }
   }
@@ -402,7 +412,12 @@ export class BooksService {
       const genreId =
         existing.length > 0
           ? existing[0].id
-          : (await tx.insert(genre).values({ name }).returning({ id: genre.id }))[0].id;
+          : (
+              await tx
+                .insert(genre)
+                .values({ name })
+                .returning({ id: genre.id })
+            )[0].id;
       await tx.insert(bookGenre).values({ bookId, genreId });
     }
   }
@@ -422,7 +437,8 @@ export class BooksService {
       const tagId =
         existing.length > 0
           ? existing[0].id
-          : (await tx.insert(tag).values({ name }).returning({ id: tag.id }))[0].id;
+          : (await tx.insert(tag).values({ name }).returning({ id: tag.id }))[0]
+              .id;
       await tx.insert(bookTag).values({ bookId, tagId });
     }
   }

@@ -1,5 +1,10 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
-import { ApiOkResponse, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
+import {
+  ApiOkResponse,
+  ApiOperation,
+  ApiQuery,
+  ApiTags,
+} from '@nestjs/swagger';
 import { DriveService } from './drive.service';
 
 @ApiTags('drive')
@@ -8,7 +13,9 @@ export class DriveController {
   constructor(private readonly driveService: DriveService) {}
 
   @Get('folders')
-  @ApiOperation({ summary: 'List folders in My Drive or inside a parent folder' })
+  @ApiOperation({
+    summary: 'List folders in My Drive or inside a parent folder',
+  })
   @ApiQuery({ name: 'parentId', required: false })
   @ApiOkResponse({ description: 'Folder list' })
   listFolders(@Query('parentId') parentId?: string) {

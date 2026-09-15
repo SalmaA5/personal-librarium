@@ -25,10 +25,7 @@ export class CollectionsService {
       .from(collection)
       .where(
         type
-          ? eq(
-              collection.type,
-              type as 'series' | 'anthology' | 'thematic',
-            )
+          ? eq(collection.type, type as 'series' | 'anthology' | 'thematic')
           : undefined,
       )
       .orderBy(asc(collection.name));
@@ -57,10 +54,7 @@ export class CollectionsService {
         .from(bookCollection)
         .innerJoin(book, eq(book.id, bookCollection.bookId))
         .where(inArray(bookCollection.collectionId, collectionIds))
-        .orderBy(
-          asc(bookCollection.collectionId),
-          asc(bookCollection.order),
-        ),
+        .orderBy(asc(bookCollection.collectionId), asc(bookCollection.order)),
     ]);
 
     const coversByCollection = new Map<number, string[]>();
@@ -188,7 +182,8 @@ export class CollectionsService {
       .where(eq(collection.id, collectionId))
       .limit(1);
 
-    if (!col) throw new NotFoundException(`Collection ${collectionId} not found`);
+    if (!col)
+      throw new NotFoundException(`Collection ${collectionId} not found`);
 
     const [b] = await this.db
       .select({ id: book.id })
@@ -260,7 +255,8 @@ export class CollectionsService {
       .where(eq(collection.id, collectionId))
       .limit(1);
 
-    if (!col) throw new NotFoundException(`Collection ${collectionId} not found`);
+    if (!col)
+      throw new NotFoundException(`Collection ${collectionId} not found`);
 
     await this.db.transaction(async (tx) => {
       for (const { bookId, order } of dto.books) {

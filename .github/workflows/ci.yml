@@ -31,5 +31,11 @@ jobs:
       - run: pnpm install --frozen-lockfile
 
       - run: pnpm nx format:check
+        env:
+          NX_BASE: origin/main
+          NX_HEAD: HEAD
 
       - run: pnpm nx run-many -t lint build --parallel=3
+        env:
+          NX_BASE: origin/main
+          NX_HEAD: HEAD

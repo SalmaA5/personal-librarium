@@ -1,4 +1,9 @@
-import { THEME_TOKENS, ThemeConfig, ThemePalette, ThemeMode } from '@librarium/utils';
+import {
+  THEME_TOKENS,
+  ThemeConfig,
+  ThemePalette,
+  ThemeMode,
+} from '@librarium/utils';
 
 const STORAGE_KEY = 'librarium-theme';
 
@@ -20,7 +25,8 @@ function applyTokens(palette: ThemePalette, mode: ThemeMode): void {
 export function initTheme(): void {
   const saved = localStorage.getItem(STORAGE_KEY);
   let palette: ThemePalette = 'teal';
-  let mode: ThemeMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+  let mode: ThemeMode = window.matchMedia('(prefers-color-scheme: dark)')
+    .matches
     ? 'dark'
     : 'light';
 

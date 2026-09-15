@@ -2,6 +2,8 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { DatabaseModule } from '../db/database.module';
+import { AuthModule } from '../auth/auth.module';
 import { BooksModule } from '../books/books.module';
 import { CollectionsModule } from '../collections/collections.module';
 import { ReaderModule } from '../reader/reader.module';
@@ -14,6 +16,8 @@ import { StatsModule } from '../stats/stats.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
+    DatabaseModule,
+    AuthModule,
     BooksModule,
     CollectionsModule,
     ReaderModule,

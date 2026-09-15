@@ -2,7 +2,8 @@
 import { config } from 'dotenv';
 import { defineConfig } from 'drizzle-kit';
 
-config({ path: './apps/api/.env.local' });
+config({ path: './apps/api/.env' });
+config({ path: './apps/api/.env.local', override: true });
 
 export default defineConfig({
   schema: './apps/api/src/db/schema.ts',

@@ -127,6 +127,14 @@ export const bookCollection = sqliteTable(
   (t) => [primaryKey({ columns: [t.bookId, t.collectionId] })],
 );
 
+export const appConfig = sqliteTable('app_config', {
+  key: text('key').primaryKey(),
+  value: text('value').notNull(),
+  updatedAt: text('updated_at')
+    .notNull()
+    .default(sql`(CURRENT_TIMESTAMP)`),
+});
+
 export const relatedBook = sqliteTable(
   'related_book',
   {

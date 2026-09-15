@@ -1,11 +1,19 @@
 import { Injectable, signal } from '@angular/core';
-import { THEME_TOKENS, ThemeConfig, ThemePalette, ThemeMode } from './theme.tokens.js';
+import {
+  THEME_TOKENS,
+  ThemeConfig,
+  ThemePalette,
+  ThemeMode,
+} from './theme.tokens.js';
 
 const STORAGE_KEY = 'librarium-theme';
 
 @Injectable({ providedIn: 'root' })
 export class ThemeService {
-  readonly currentTheme = signal<ThemeConfig>({ palette: 'teal', mode: 'dark' });
+  readonly currentTheme = signal<ThemeConfig>({
+    palette: 'teal',
+    mode: 'dark',
+  });
 
   private _mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
   private _systemListener = (e: MediaQueryListEvent) => {

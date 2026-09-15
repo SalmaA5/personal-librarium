@@ -18,7 +18,10 @@ export interface ThemeConfig {
   mode: ThemeMode;
 }
 
-export const THEME_TOKENS: Record<ThemePalette, Record<ThemeMode, ThemeTokens>> = {
+export const THEME_TOKENS: Record<
+  ThemePalette,
+  Record<ThemeMode, ThemeTokens>
+> = {
   teal: {
     light: {
       accent: '#386878',

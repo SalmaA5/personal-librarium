@@ -13,8 +13,8 @@ out
 .nx/workspace-data
 tmp
 
-# Environment
-.env
+# Environment — root .env is committed (build tool config only, no secrets)
+# Secrets go in .env.local or apps/*/.env (gitignored)
 .env.local
 .env.*.local
 

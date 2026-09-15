@@ -30,7 +30,7 @@ Personal digital library manager for books and manga. Stores metadata and readin
 
 ```
 apps/
-  api/      NestJS 11 — REST API
+  api/      NestJS 12 — REST API
   web/      Angular 22 standalone — browser reader
   mobile/   Ionic 9 + Angular + Capacitor — mobile app
 libs/

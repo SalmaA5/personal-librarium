@@ -21,12 +21,10 @@ export class AuthService implements OnModuleInit {
     @Inject(DRIZZLE) private readonly db: DrizzleClient,
     private readonly config: ConfigService,
   ) {
-    const redirectUri = `${config.get<string>('API_BASE_URL', 'http://localhost:3000')}/api/auth/google/callback`;
-    console.log('OAuth2 redirect URI:', redirectUri);
     this.oauth2Client = new google.auth.OAuth2(
       config.getOrThrow<string>('GOOGLE_CLIENT_ID'),
       config.getOrThrow<string>('GOOGLE_CLIENT_SECRET'),
-      redirectUri,
+      `${config.get<string>('API_BASE_URL', 'http://localhost:3000')}/api/auth/google/callback`,
     );
 
     // Persist any rotated tokens automatically

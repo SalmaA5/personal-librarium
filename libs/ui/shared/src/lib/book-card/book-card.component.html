@@ -1,0 +1,31 @@
+<a class="book-card" [routerLink]="['/books', book().id]">
+  <div class="cover-wrap">
+    @if (hasCover()) {
+      <img class="cover" [src]="book().coverUrl!" [alt]="book().title" />
+    } @else {
+      <div class="cover-placeholder">
+        <i class="pi pi-book"></i>
+      </div>
+    }
+    @if (book().format) {
+      <span class="badge-format">{{ book().format }}</span>
+    }
+  </div>
+
+  <div class="card-info">
+    @if (book().status === 'reading') {
+      <span class="badge-status reading">Leyendo</span>
+    } @else if (book().status === 'read') {
+      <span class="badge-status read">&#10003;</span>
+    }
+    <span class="book-title">{{ book().title }}</span>
+    @if (firstAuthor()) {
+      <span class="book-author">{{ firstAuthor() }}</span>
+    }
+    @if (percentage() > 0) {
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-fill" [style.width.%]="percentage()"></div>
+      </div>
+    }
+  </div>
+</a>

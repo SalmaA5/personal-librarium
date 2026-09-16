@@ -24,3 +24,9 @@ export interface LibraryStats {
   byFormat: FormatStat[];
   recentlyRead: RecentlyRead[];
 }
+
+export interface MetadataItem {
+  id: number;
+  name: string;
+  count: number;
+}

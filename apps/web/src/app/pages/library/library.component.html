@@ -1,0 +1,130 @@
+<div class="library">
+  <!-- Search bar -->
+  <div class="search-wrap">
+    <i class="pi pi-search search-icon"></i>
+    <input
+      class="search-input"
+      type="text"
+      placeholder="Buscar por título o autor..."
+      [value]="searchInput()"
+      (input)="onSearchChange($event)"
+    />
+  </div>
+
+  <!-- Filter row -->
+  <div class="filter-row">
+    <div class="filters-left">
+      <select
+        [value]="genreFilter()"
+        (change)="onFilterChange('genre', $any($event.target).value)"
+      >
+        <option value="">Todos los géneros</option>
+        @for (g of genresQuery.data() ?? []; track g.id) {
+          <option [value]="g.name">{{ g.name }} ({{ g.count }})</option>
+        }
+      </select>
+
+      <select
+        [value]="formatFilter()"
+        (change)="onFilterChange('format', $any($event.target).value)"
+      >
+        <option value="">Todos los formatos</option>
+        <option value="epub">EPUB</option>
+        <option value="pdf">PDF</option>
+        <option value="html">HTML</option>
+        <option value="cbz">CBZ</option>
+      </select>
+
+      <select
+        [value]="statusFilter()"
+        (change)="onFilterChange('status', $any($event.target).value)"
+      >
+        <option value="">Todos los estados</option>
+        <option value="unread">Sin leer</option>
+        <option value="reading">Leyendo</option>
+        <option value="read">Leído</option>
+      </select>
+
+      @if (hasActiveFilters()) {
+        <button class="btn-clear" (click)="clearFilters()">
+          Limpiar filtros
+        </button>
+      }
+    </div>
+
+    <div class="filters-right">
+      <select
+        [value]="sortBy()"
+        (change)="onFilterChange('sort', $any($event.target).value)"
+      >
+        <option value="createdAt">Fecha añadido</option>
+        <option value="title">Título</option>
+        <option value="author">Autor</option>
+        <option value="lastRead">Última lectura</option>
+      </select>
+      <select
+        [value]="orderDir()"
+        (change)="onFilterChange('order', $any($event.target).value)"
+      >
+        <option value="desc">↓ Desc</option>
+        <option value="asc">↑ Asc</option>
+      </select>
+
+      <a routerLink="/books/new" class="btn-primary">+ Nuevo libro</a>
+    </div>
+  </div>
+
+  <!-- Book grid -->
+  @if (booksQuery.isPending()) {
+    <div class="book-grid">
+      @for (i of [1, 2, 3, 4, 5, 6, 7, 8]; track i) {
+        <div class="skeleton-card"></div>
+      }
+    </div>
+  } @else if (booksQuery.isError()) {
+    <div class="empty-state">
+      <i class="pi pi-exclamation-triangle"></i>
+      <p>Error al cargar la biblioteca.</p>
+      <button (click)="booksQuery.refetch()">Reintentar</button>
+    </div>
+  } @else if ((booksQuery.data()?.data ?? []).length === 0) {
+    @if (hasActiveFilters()) {
+      <div class="empty-state">
+        <i class="pi pi-filter-slash"></i>
+        <p>No hay libros con estos filtros.</p>
+        <button (click)="clearFilters()">Limpiar filtros</button>
+      </div>
+    } @else {
+      <div class="empty-state">
+        <i class="pi pi-book"></i>
+        <p>Tu biblioteca está vacía.</p>
+        <a routerLink="/import" class="btn-primary">Importar primer libro</a>
+      </div>
+    }
+  } @else {
+    <div class="book-grid">
+      @for (book of booksQuery.data()?.data ?? []; track book.id) {
+        <lib-book-card [book]="book" />
+      }
+    </div>
+  }
+
+  <!-- Pagination -->
+  @if ((booksQuery.data()?.total ?? 0) > 20) {
+    <div class="pagination">
+      <button
+        [disabled]="currentPage() === 1"
+        (click)="currentPage.set(currentPage() - 1)"
+      >
+        ← Anterior
+      </button>
+      <span class="page-info">{{ currentPage() }} / {{ totalPages() }}</span>
+      <button
+        [disabled]="currentPage() >= totalPages()"
+        (click)="currentPage.set(currentPage() + 1)"
+      >
+        Siguiente →
+      </button>
+    </div>
+  }
+</div>

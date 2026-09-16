@@ -69,7 +69,7 @@
     "@nestjs/core": "^12.0.1",
     "@nestjs/platform-express": "^12.0.1",
     "@nestjs/swagger": "^12.0.1",
-    "@primeuix/themes": "^3.0.0",
+    "@tanstack/angular-query-experimental": "^5.102.8",
     "axios": "^1.6.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.15.1",

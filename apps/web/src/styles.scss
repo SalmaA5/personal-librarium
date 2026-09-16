@@ -1,3 +1,26 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
+/* Reset */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background: var(--color-bg-page);
+  color: var(--color-text-primary);
+}
+
 /* 1 — Default theme tokens (TEAL_DARK). ThemeService overwrites these at runtime. */
 :root {
   --color-accent: #386878;
@@ -11,8 +34,7 @@
   --color-border: rgba(255, 255, 255, 0.07);
 }
 
-/* 2 — PrimeNG design-token overrides. Cascade from --color-* so every
-        ThemeService change propagates to PrimeNG components automatically. */
+/* 2 — PrimeNG design-token overrides */
 :root {
   --p-primary-color: var(--color-accent);
   --p-primary-contrast-color: var(--color-text-primary);

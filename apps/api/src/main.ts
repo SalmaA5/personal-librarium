@@ -12,6 +12,17 @@ async function bootstrap() {
   app.useStaticAssets(join(process.cwd(), 'uploads'), { prefix: '/uploads' });
   app.setGlobalPrefix(globalPrefix);
 
+  app.use(
+    (
+      _req: unknown,
+      res: { setHeader: (k: string, v: string) => void },
+      next: () => void,
+    ) => {
+      res.setHeader('Content-Type', 'application/json; charset=utf-8');
+      next();
+    },
+  );
+
   app.enableCors({ origin: 'http://localhost:4200' });
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
 

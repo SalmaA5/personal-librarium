@@ -1,0 +1,218 @@
+<div class="book-detail">
+  @if (bookQuery.isPending()) {
+    <div class="skeleton-layout">
+      <div class="skeleton-cover"></div>
+      <div class="skeleton-info">
+        <div class="skeleton-line wide"></div>
+        <div class="skeleton-line medium"></div>
+        <div class="skeleton-line short"></div>
+        <div class="skeleton-line wide"></div>
+        <div class="skeleton-line medium"></div>
+      </div>
+    </div>
+  } @else if (bookQuery.isError()) {
+    <div class="state-message">
+      <i class="pi pi-exclamation-triangle"></i>
+      <p>Error al cargar el libro.</p>
+      <a routerLink="/library" class="btn-secondary">Volver a la biblioteca</a>
+    </div>
+  } @else if (!bookQuery.data()) {
+    <div class="state-message">
+      <i class="pi pi-book"></i>
+      <p>Libro no encontrado.</p>
+      <a routerLink="/library" class="btn-secondary">Volver a la biblioteca</a>
+    </div>
+  } @else {
+    <div class="layout">
+      <!-- Left column -->
+      <aside class="left-col">
+        <div class="cover-wrap">
+          @if (bookQuery.data()!.coverUrl) {
+            <img
+              class="cover"
+              [src]="coverUrl(bookQuery.data()!.coverUrl)"
+              [alt]="bookQuery.data()!.title"
+            />
+          } @else {
+            <div class="cover-placeholder">
+              <i class="pi pi-book"></i>
+            </div>
+          }
+        </div>
+
+        @if (percentage() > 0) {
+          <div class="progress-section">
+            <div class="progress-bar-wrap">
+              <div
+                class="progress-bar-fill"
+                [style.width.%]="percentage()"
+              ></div>
+            </div>
+            <span class="progress-label">{{ percentage() }}% leído</span>
+            @if (latestProgress()?.lastReadAt) {
+              <span class="last-read"
+                >Última lectura:
+                {{ latestProgress()!.lastReadAt | slice: 0 : 10 }}</span
+              >
+            }
+          </div>
+        }
+
+        <div class="action-buttons">
+          <a
+            [routerLink]="['/books', id(), 'read']"
+            class="btn-action btn-read"
+          >
+            <i class="pi pi-play"></i> Leer
+          </a>
+          <a
+            [routerLink]="['/books', id(), 'edit']"
+            class="btn-action btn-edit"
+          >
+            <i class="pi pi-pencil"></i> Editar
+          </a>
+          <button
+            class="btn-action btn-delete"
+            (click)="confirmDelete()"
+            [disabled]="deleteMutation.isPending()"
+          >
+            <i class="pi pi-trash"></i> Eliminar
+          </button>
+        </div>
+      </aside>
+
+      <!-- Right column -->
+      <section class="right-col">
+        <h1 class="book-title">{{ bookQuery.data()!.title }}</h1>
+
+        @if (bookQuery.data()!.authors.length > 0) {
+          <p class="book-authors">
+            {{
+              bookQuery
+                .data()!
+                .authors.map((a) => a.name)
+                .join(', ')
+            }}
+          </p>
+        }
+
+        @if (bookQuery.data()!.genres.length > 0) {
+          <div class="badges">
+            @for (g of bookQuery.data()!.genres; track g.id) {
+              <span class="badge-genre">{{ g.name }}</span>
+            }
+          </div>
+        }
+
+        @if (bookQuery.data()!.tags && bookQuery.data()!.tags.length > 0) {
+          <div class="badges">
+            @for (t of bookQuery.data()!.tags; track t.id) {
+              <span class="badge-tag">{{ t.name }}</span>
+            }
+          </div>
+        }
+
+        @if (bookQuery.data()!.synopsis) {
+          <div class="section-divider">
+            <h3 class="section-label">Sinopsis</h3>
+            <p class="synopsis">{{ bookQuery.data()!.synopsis }}</p>
+          </div>
+        }
+
+        <div class="section-divider">
+          <h3 class="section-label">Detalles</h3>
+          <div class="meta-grid">
+            @if (bookQuery.data()!.year) {
+              <span class="meta-label">Año</span>
+              <span class="meta-value">{{ bookQuery.data()!.year }}</span>
+            }
+            @if (bookQuery.data()!.publisher) {
+              <span class="meta-label">Editorial</span>
+              <span class="meta-value">{{ bookQuery.data()!.publisher }}</span>
+            }
+            @if (bookQuery.data()!.format) {
+              <span class="meta-label">Formato</span>
+              <span class="meta-value">{{
+                bookQuery.data()!.format?.toUpperCase()
+              }}</span>
+            }
+            @if (bookQuery.data()!.totalChapters) {
+              <span class="meta-label">Capítulos</span>
+              <span class="meta-value">{{
+                bookQuery.data()!.totalChapters
+              }}</span>
+            }
+            @if (bookQuery.data()!.totalVolumes) {
+              <span class="meta-label">Volúmenes</span>
+              <span class="meta-value">{{
+                bookQuery.data()!.totalVolumes
+              }}</span>
+            }
+            <span class="meta-label">Estado</span>
+            <span class="meta-value">
+              @if (bookQuery.data()!.status === 'unread') {
+                Sin leer
+              } @else if (bookQuery.data()!.status === 'reading') {
+                Leyendo
+              } @else {
+                Leído
+              }
+            </span>
+          </div>
+        </div>
+
+        <div class="section-divider">
+          <h3 class="section-label">Mi valoración</h3>
+          <div class="stars" (mouseleave)="hoverRating.set(0)">
+            @for (star of stars; track star) {
+              <i
+                [class]="
+                  (hoverRating() || bookQuery.data()!.rating || 0) >= star
+                    ? 'pi pi-star-fill'
+                    : 'pi pi-star'
+                "
+                (mouseenter)="hoverRating.set(star)"
+                (click)="setRating(star)"
+              ></i>
+            }
+          </div>
+        </div>
+
+        <div class="section-divider">
+          <h3 class="section-label">Mi reseña</h3>
+          <textarea
+            class="review-input"
+            placeholder="Escribe tu reseña..."
+            [value]="bookQuery.data()!.review ?? ''"
+            (blur)="saveReview($event)"
+            rows="4"
+          ></textarea>
+        </div>
+      </section>
+    </div>
+
+    @if (bookQuery.data()!.collections.length > 0) {
+      <div class="extra-section">
+        <h3 class="section-label">Colecciones</h3>
+        <div class="collection-list">
+          @for (col of bookQuery.data()!.collections; track col.id) {
+            <a [routerLink]="['/collections', col.id]" class="collection-link">
+              {{ col.name }}
+            </a>
+          }
+        </div>
+      </div>
+    }
+
+    @if (bookQuery.data()!.related.length > 0) {
+      <div class="extra-section">
+        <h3 class="section-label">Libros relacionados</h3>
+        <div class="related-grid">
+          @for (rel of bookQuery.data()!.related; track rel.id) {
+            <lib-book-card [book]="toBookCard(rel)" />
+          }
+        </div>
+      </div>
+    }
+  }
+</div>

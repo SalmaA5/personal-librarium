@@ -46,7 +46,7 @@ libs/
 
 - **Package manager**: always `pnpm`. Use `pnpm add -w` for workspace-root deps.
 - **Nx commands**: prefix with `pnpm` (e.g. `pnpm nx serve api`).
-- **Commits**: use Conventional Commits. Fixes to the same feature go in `--amend`, not a new commit.
+- **Commits**: use Conventional Commits. Fixes to the same feature go in `--amend`, not a new commit. **Never commit unless explicitly asked.**
 - **Branches**: `feature/<name>` off `main`; delete local + remote after merging the PR.
 - **Angular style**: standalone components everywhere, no NgModules in new code.
 - **No `APP_INITIALIZER`**: use `provideAppInitializer()` (Angular 19+).

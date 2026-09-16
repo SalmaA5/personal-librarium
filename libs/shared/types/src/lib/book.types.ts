@@ -49,10 +49,27 @@ export interface Tag {
   name: string;
 }
 
-export interface BookDetail extends Book {
+export interface BookCollection {
+  id: number;
+  name: string;
+  type: string;
+  order: number | null;
+}
+
+export interface RelatedBook {
+  id: number;
+  title: string;
+  coverUrl: string | null;
+  relationType: string;
+}
+
+export interface BookDetail extends Omit<Book, 'progress'> {
   authors: Author[];
   genres: Genre[];
   tags: Tag[];
+  collections: BookCollection[];
+  related: RelatedBook[];
+  progress: ReadingProgress[];
 }
 
 export interface BookFilters {

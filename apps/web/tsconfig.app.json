@@ -8,6 +8,15 @@
   "exclude": ["src/**/*.spec.ts", "src/**/*.test.ts"],
   "references": [
     {
+      "path": "../../libs/ui/shared/tsconfig.lib.json"
+    },
+    {
+      "path": "../../libs/shared/api-client/tsconfig.lib.json"
+    },
+    {
+      "path": "../../libs/shared/types/tsconfig.lib.json"
+    },
+    {
       "path": "../../libs/shared/utils/tsconfig.lib.json"
     }
   ]

@@ -29,6 +29,9 @@ export interface Book {
   createdAt: string;
   updatedAt: string;
   authors?: Author[];
+  genres?: Genre[];
+  tags?: Tag[];
+  progress?: ReadingProgress | null;
 }
 
 export interface Author {

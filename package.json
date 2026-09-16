@@ -5,9 +5,13 @@
   "scripts": {
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
-    "db:studio": "drizzle-kit studio"
+    "db:studio": "drizzle-kit studio",
+    "prepare": "husky"
   },
   "private": true,
+  "lint-staged": {
+    "*.{ts,js,mjs,cjs,json,md,html,scss,css,yaml,yml}": "prettier --write"
+  },
   "devDependencies": {
     "@analogjs/vite-plugin-angular": "~2.6.0",
     "@analogjs/vitest-angular": "~2.6.0",
@@ -42,7 +46,9 @@
     "dotenv": "^17.4.2",
     "drizzle-kit": "^0.31.10",
     "esbuild": "^0.28.2",
+    "husky": "^9.1.7",
     "jsdom": "^27.1.0",
+    "lint-staged": "^17.5.1",
     "nx": "23.2.1",
     "prettier": "^3.8.1",
     "tslib": "^2.3.0",

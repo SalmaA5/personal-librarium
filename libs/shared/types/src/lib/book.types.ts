@@ -28,6 +28,7 @@ export interface Book {
   originalFormat: string | null;
   createdAt: string;
   updatedAt: string;
+  authors?: Author[];
 }
 
 export interface Author {

@@ -50,8 +50,12 @@ export class BooksService {
     return this.http.delete<void>(this.url(`/books/${id}`));
   }
 
-  getCoverUrl(id: number): string {
-    return this.url(`/books/${id}/cover`);
+  getCoverUrl(coverUrl: string | null): string {
+    if (!coverUrl) {
+      return `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 2 3'%3E%3Crect width='2' height='3' fill='%234b5563'/%3E%3C/svg%3E`;
+    }
+    if (coverUrl.startsWith('http')) return coverUrl;
+    return `${this.base}${coverUrl}`;
   }
 
   getProgress(id: number): Observable<ReadingProgress> {

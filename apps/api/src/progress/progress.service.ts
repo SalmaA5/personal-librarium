@@ -29,6 +29,28 @@ export class ProgressService {
     return row;
   }
 
+  async reset(bookId: number) {
+    const [found] = await this.db
+      .select({ id: book.id })
+      .from(book)
+      .where(eq(book.id, bookId))
+      .limit(1);
+
+    if (!found) throw new NotFoundException(`Book ${bookId} not found`);
+
+    await this.db
+      .update(readingProgress)
+      .set({
+        currentPage: null,
+        epubCfi: null,
+        percentage: 0,
+        lastReadAt: sql`(CURRENT_TIMESTAMP)`,
+      })
+      .where(eq(readingProgress.bookId, bookId));
+
+    return { bookId, reset: true };
+  }
+
   async upsert(bookId: number, dto: UpdateProgressDto) {
     const [found] = await this.db
       .select({ id: book.id })

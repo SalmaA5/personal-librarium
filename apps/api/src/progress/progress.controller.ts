@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   ParseIntPipe,
@@ -38,5 +39,13 @@ export class ProgressController {
     @Body() dto: UpdateProgressDto,
   ) {
     return this.progressService.upsert(bookId, dto);
+  }
+
+  @Delete()
+  @ApiOperation({ summary: 'Reset reading progress for a book' })
+  @ApiOkResponse({ description: 'Progress reset' })
+  @ApiNotFoundResponse({ description: 'Book not found' })
+  reset(@Param('bookId', ParseIntPipe) bookId: number) {
+    return this.progressService.reset(bookId);
   }
 }

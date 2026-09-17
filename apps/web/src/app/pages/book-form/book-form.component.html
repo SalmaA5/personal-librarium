@@ -1,0 +1,246 @@
+<div class="book-form-page">
+  <div class="form-header">
+    <h1 class="form-title">
+      {{ isEditMode() ? 'Editar libro' : 'Nuevo libro' }}
+    </h1>
+  </div>
+
+  @if (isEditMode() && bookQuery.isPending()) {
+    <div class="skeleton-form">
+      <div class="skeleton-line wide"></div>
+      <div class="skeleton-line medium"></div>
+      <div class="skeleton-line wide"></div>
+      <div class="skeleton-line short"></div>
+    </div>
+  } @else {
+    <form [formGroup]="form" (ngSubmit)="save()" class="form" novalidate>
+      <!-- Title -->
+      <div class="field">
+        <label class="label" for="title"
+          >Título <span class="required">*</span></label
+        >
+        <input
+          id="title"
+          class="input"
+          type="text"
+          formControlName="title"
+          placeholder="Título del libro"
+        />
+        @if (form.get('title')?.invalid && form.get('title')?.touched) {
+          <span class="error">El título es obligatorio</span>
+        }
+      </div>
+
+      <!-- Authors chips -->
+      <div class="field">
+        <label class="label">Autores</label>
+        <div class="chip-wrap">
+          @for (a of authors(); track a) {
+            <span class="chip">
+              {{ a }}
+              <button
+                type="button"
+                class="chip-remove"
+                (click)="removeAuthor(a)"
+              >
+                ×
+              </button>
+            </span>
+          }
+        </div>
+        <div class="chip-input-row">
+          <input
+            class="input chip-input"
+            type="text"
+            placeholder="Añadir autor..."
+            [value]="authorInput()"
+            (input)="authorInput.set($any($event.target).value)"
+            (keydown)="onChipInputKeydown($event, 'author')"
+          />
+          <button type="button" class="btn-add" (click)="addAuthor()">+</button>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- Genres checkboxes -->
+      <div class="field">
+        <label class="label">Géneros</label>
+        @if (genresQuery.isPending()) {
+          <span class="loading-text">Cargando géneros...</span>
+        } @else {
+          <div class="genre-grid">
+            @for (g of allGenreNames(); track g) {
+              <label class="genre-check">
+                <input
+                  type="checkbox"
+                  [checked]="isGenreSelected(g)"
+                  (change)="toggleGenre(g)"
+                />
+                {{ g }}
+              </label>
+            }
+          </div>
+        }
+        <div class="chip-input-row" style="margin-top: 0.5rem">
+          <input
+            class="input chip-input"
+            type="text"
+            placeholder="Añadir género nuevo..."
+            [value]="genreInput()"
+            (input)="genreInput.set($any($event.target).value)"
+            (keydown)="onChipInputKeydown($event, 'genre')"
+          />
+          <button type="button" class="btn-add" (click)="addGenre()">+</button>
+        </div>
+      </div>
+
+      <!-- Tags chips -->
+      <div class="field">
+        <label class="label">Tags</label>
+        <div class="chip-wrap">
+          @for (t of tags(); track t) {
+            <span class="chip">
+              {{ t }}
+              <button type="button" class="chip-remove" (click)="removeTag(t)">
+                ×
+              </button>
+            </span>
+          }
+        </div>
+        <div class="chip-input-row">
+          <input
+            class="input chip-input"
+            type="text"
+            placeholder="Añadir tag..."
+            [value]="tagInput()"
+            (input)="tagInput.set($any($event.target).value)"
+            (keydown)="onChipInputKeydown($event, 'tag')"
+          />
+          <button type="button" class="btn-add" (click)="addTag()">+</button>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- Format + Status -->
+      <div class="grid-2">
+        <div class="field">
+          <label class="label" for="format">Formato</label>
+          <select id="format" class="input" formControlName="format">
+            <option value="">— Sin especificar —</option>
+            @for (f of formats; track f.value) {
+              <option [value]="f.value">{{ f.label }}</option>
+            }
+          </select>
+        </div>
+        <div class="field">
+          <label class="label" for="status">Estado</label>
+          <select id="status" class="input" formControlName="status">
+            @for (s of statuses; track s.value) {
+              <option [value]="s.value">{{ s.label }}</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      <!-- Year + Publisher -->
+      <div class="grid-2">
+        <div class="field">
+          <label class="label" for="year">Año</label>
+          <input
+            id="year"
+            class="input"
+            type="number"
+            formControlName="year"
+            placeholder="2024"
+          />
+          @if (form.get('year')?.invalid && form.get('year')?.touched) {
+            <span class="error">Año entre 1000 y 2100</span>
+          }
+        </div>
+        <div class="field">
+          <label class="label" for="publisher">Editorial</label>
+          <input
+            id="publisher"
+            class="input"
+            type="text"
+            formControlName="publisher"
+            placeholder="Editorial"
+          />
+        </div>
+      </div>
+
+      <!-- Chapters + Volumes -->
+      <div class="grid-2">
+        <div class="field">
+          <label class="label" for="totalChapters">Nº Capítulos</label>
+          <input
+            id="totalChapters"
+            class="input"
+            type="number"
+            formControlName="totalChapters"
+            placeholder="0"
+          />
+        </div>
+        <div class="field">
+          <label class="label" for="totalVolumes">Nº Volúmenes</label>
+          <input
+            id="totalVolumes"
+            class="input"
+            type="number"
+            formControlName="totalVolumes"
+            placeholder="0"
+          />
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- Synopsis -->
+      <div class="field">
+        <label class="label" for="synopsis">Sinopsis</label>
+        <textarea
+          id="synopsis"
+          class="input textarea"
+          formControlName="synopsis"
+          placeholder="Descripción del libro..."
+          rows="5"
+        ></textarea>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- Drive File ID -->
+      <div class="field">
+        <label class="label" for="driveFileId">Drive File ID</label>
+        <input
+          id="driveFileId"
+          class="input"
+          type="text"
+          formControlName="driveFileId"
+          placeholder="1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgVE2upms"
+        />
+      </div>
+
+      <div class="divider"></div>
+
+      @if (saveError()) {
+        <p class="save-error">{{ saveError() }}</p>
+      }
+
+      <div class="form-actions">
+        <button type="button" class="btn-cancel" (click)="cancel()">
+          Cancelar
+        </button>
+        <button
+          type="submit"
+          class="btn-save"
+          [disabled]="saveMutation.isPending()"
+        >
+          {{ saveMutation.isPending() ? 'Guardando...' : 'Guardar' }}
+        </button>
+      </div>
+    </form>
+  }
+</div>

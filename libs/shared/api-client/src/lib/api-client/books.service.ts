@@ -71,4 +71,8 @@ export class BooksService {
       dto,
     );
   }
+
+  resetProgress(bookId: number): Observable<void> {
+    return this.http.delete<void>(this.url(`/books/${bookId}/progress`));
+  }
 }

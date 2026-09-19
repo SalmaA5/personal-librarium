@@ -1,5 +1,4 @@
-export type ThemePalette = 'teal' | 'mauve';
-export type ThemeMode = 'light' | 'dark';
+import { ThemeMode, ThemePalette } from './theme.types.js';
 
 export interface ThemeTokens {
   accent: string;
@@ -13,15 +12,7 @@ export interface ThemeTokens {
   border: string;
 }
 
-export interface ThemeConfig {
-  palette: ThemePalette;
-  mode: ThemeMode;
-}
-
-export const THEME_TOKENS: Record<
-  ThemePalette,
-  Record<ThemeMode, ThemeTokens>
-> = {
+export const THEME_TOKENS: Record<ThemePalette, Record<ThemeMode, ThemeTokens>> = {
   teal: {
     light: {
       accent: '#386878',

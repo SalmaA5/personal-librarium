@@ -16,16 +16,13 @@
     <form [formGroup]="form" (ngSubmit)="save()" class="form" novalidate>
       <!-- Title -->
       <div class="field">
-        <label class="label" for="title"
-          >Título <span class="required">*</span></label
-        >
+        <label class="label" for="title">Título <span class="required">*</span></label>
         <input
           id="title"
           class="input"
           type="text"
           formControlName="title"
-          placeholder="Título del libro"
-        />
+          placeholder="Título del libro" />
         @if (form.get('title')?.invalid && form.get('title')?.touched) {
           <span class="error">El título es obligatorio</span>
         }
@@ -38,11 +35,7 @@
           @for (a of authors(); track a) {
             <span class="chip">
               {{ a }}
-              <button
-                type="button"
-                class="chip-remove"
-                (click)="removeAuthor(a)"
-              >
+              <button type="button" class="chip-remove" (click)="removeAuthor(a)">
                 ×
               </button>
             </span>
@@ -55,8 +48,7 @@
             placeholder="Añadir autor..."
             [value]="authorInput()"
             (input)="authorInput.set($any($event.target).value)"
-            (keydown)="onChipInputKeydown($event, 'author')"
-          />
+            (keydown)="onChipInputKeydown($event, 'author')" />
           <button type="button" class="btn-add" (click)="addAuthor()">+</button>
         </div>
       </div>
@@ -75,8 +67,7 @@
                 <input
                   type="checkbox"
                   [checked]="isGenreSelected(g)"
-                  (change)="toggleGenre(g)"
-                />
+                  (change)="toggleGenre(g)" />
                 {{ g }}
               </label>
             }
@@ -89,8 +80,7 @@
             placeholder="Añadir género nuevo..."
             [value]="genreInput()"
             (input)="genreInput.set($any($event.target).value)"
-            (keydown)="onChipInputKeydown($event, 'genre')"
-          />
+            (keydown)="onChipInputKeydown($event, 'genre')" />
           <button type="button" class="btn-add" (click)="addGenre()">+</button>
         </div>
       </div>
@@ -102,9 +92,7 @@
           @for (t of tags(); track t) {
             <span class="chip">
               {{ t }}
-              <button type="button" class="chip-remove" (click)="removeTag(t)">
-                ×
-              </button>
+              <button type="button" class="chip-remove" (click)="removeTag(t)">×</button>
             </span>
           }
         </div>
@@ -115,8 +103,7 @@
             placeholder="Añadir tag..."
             [value]="tagInput()"
             (input)="tagInput.set($any($event.target).value)"
-            (keydown)="onChipInputKeydown($event, 'tag')"
-          />
+            (keydown)="onChipInputKeydown($event, 'tag')" />
           <button type="button" class="btn-add" (click)="addTag()">+</button>
         </div>
       </div>
@@ -127,20 +114,24 @@
       <div class="grid-2">
         <div class="field">
           <label class="label" for="format">Formato</label>
-          <select id="format" class="input" formControlName="format">
-            <option value="">— Sin especificar —</option>
-            @for (f of formats; track f.value) {
-              <option [value]="f.value">{{ f.label }}</option>
-            }
-          </select>
+          <p-select
+            inputId="format"
+            [options]="formats"
+            optionLabel="label"
+            optionValue="value"
+            formControlName="format"
+            placeholder="— Sin especificar —"
+            styleClass="p-select-full" />
         </div>
         <div class="field">
           <label class="label" for="status">Estado</label>
-          <select id="status" class="input" formControlName="status">
-            @for (s of statuses; track s.value) {
-              <option [value]="s.value">{{ s.label }}</option>
-            }
-          </select>
+          <p-select
+            inputId="status"
+            [options]="statuses"
+            optionLabel="label"
+            optionValue="value"
+            formControlName="status"
+            styleClass="p-select-full" />
         </div>
       </div>
 
@@ -153,8 +144,7 @@
             class="input"
             type="number"
             formControlName="year"
-            placeholder="2024"
-          />
+            placeholder="2024" />
           @if (form.get('year')?.invalid && form.get('year')?.touched) {
             <span class="error">Año entre 1000 y 2100</span>
           }
@@ -166,8 +156,7 @@
             class="input"
             type="text"
             formControlName="publisher"
-            placeholder="Editorial"
-          />
+            placeholder="Editorial" />
         </div>
       </div>
 
@@ -180,8 +169,7 @@
             class="input"
             type="number"
             formControlName="totalChapters"
-            placeholder="0"
-          />
+            placeholder="0" />
         </div>
         <div class="field">
           <label class="label" for="totalVolumes">Nº Volúmenes</label>
@@ -190,8 +178,7 @@
             class="input"
             type="number"
             formControlName="totalVolumes"
-            placeholder="0"
-          />
+            placeholder="0" />
         </div>
       </div>
 
@@ -205,8 +192,7 @@
           class="input textarea"
           formControlName="synopsis"
           placeholder="Descripción del libro..."
-          rows="5"
-        ></textarea>
+          rows="5"></textarea>
       </div>
 
       <div class="divider"></div>
@@ -219,8 +205,7 @@
           class="input"
           type="text"
           formControlName="driveFileId"
-          placeholder="1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgVE2upms"
-        />
+          placeholder="1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgVE2upms" />
       </div>
 
       <div class="divider"></div>
@@ -230,14 +215,8 @@
       }
 
       <div class="form-actions">
-        <button type="button" class="btn-cancel" (click)="cancel()">
-          Cancelar
-        </button>
-        <button
-          type="submit"
-          class="btn-save"
-          [disabled]="saveMutation.isPending()"
-        >
+        <button type="button" class="btn-cancel" (click)="cancel()">Cancelar</button>
+        <button type="submit" class="btn-save" [disabled]="saveMutation.isPending()">
           {{ saveMutation.isPending() ? 'Guardando...' : 'Guardar' }}
         </button>
       </div>

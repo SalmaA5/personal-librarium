@@ -4,16 +4,14 @@
       <button
         class="filter-btn"
         [class.active]="filterTypeId() === null"
-        (click)="setFilter(null)"
-      >
+        (click)="setFilter(null)">
         Todas
       </button>
       @for (t of typesQuery.data() ?? []; track t.id) {
         <button
           class="filter-btn"
           [class.active]="filterTypeId() === t.id"
-          (click)="setFilter(t.id)"
-        >
+          (click)="setFilter(t.id)">
           {{ t.name }}
         </button>
       }
@@ -22,11 +20,7 @@
   </div>
 
   @if (showCreateForm()) {
-    <form
-      class="create-form"
-      [formGroup]="createForm"
-      (ngSubmit)="submitCreate()"
-    >
+    <form class="create-form" [formGroup]="createForm" (ngSubmit)="submitCreate()">
       <h3 class="create-title">Nueva colección</h3>
       <div class="form-row">
         <div class="field">
@@ -35,21 +29,20 @@
             class="input"
             type="text"
             formControlName="name"
-            placeholder="Nombre de la colección"
-          />
-          @if (
-            createForm.get('name')?.invalid && createForm.get('name')?.touched
-          ) {
+            placeholder="Nombre de la colección" />
+          @if (createForm.get('name')?.invalid && createForm.get('name')?.touched) {
             <span class="error">El nombre es obligatorio</span>
           }
         </div>
         <div class="field">
           <label class="label">Tipo</label>
-          <select class="input" formControlName="typeId">
-            @for (t of typesQuery.data() ?? []; track t.id) {
-              <option [value]="t.id">{{ t.name }}</option>
-            }
-          </select>
+          <p-select
+            [options]="typesQuery.data() ?? []"
+            optionLabel="name"
+            optionValue="id"
+            formControlName="typeId"
+            placeholder="Seleccionar tipo"
+            styleClass="p-select-full" />
         </div>
       </div>
       <div class="field">
@@ -58,18 +51,13 @@
           class="input"
           type="text"
           formControlName="description"
-          placeholder="Descripción opcional"
-        />
+          placeholder="Descripción opcional" />
       </div>
       <div class="form-actions">
         <button type="button" class="btn-cancel" (click)="cancelCreate()">
           Cancelar
         </button>
-        <button
-          type="submit"
-          class="btn-save"
-          [disabled]="createMutation.isPending()"
-        >
+        <button type="submit" class="btn-save" [disabled]="createMutation.isPending()">
           {{ createMutation.isPending() ? 'Creando...' : 'Crear' }}
         </button>
       </div>
@@ -91,9 +79,7 @@
   } @else if ((collectionsQuery.data() ?? []).length === 0) {
     <div class="empty-state">
       <p>No tienes colecciones todavía</p>
-      <button class="btn-new" (click)="openCreateForm()">
-        + Crear colección
-      </button>
+      <button class="btn-new" (click)="openCreateForm()">+ Crear colección</button>
     </div>
   } @else {
     <div class="grid">
@@ -102,11 +88,7 @@
           <div class="mosaic">
             @for (slot of coverSlots(col.covers); track $index) {
               @if (slot) {
-                <img
-                  class="mosaic-cell"
-                  [src]="getCoverUrl(slot)"
-                  [alt]="col.name"
-                />
+                <img class="mosaic-cell" [src]="getCoverUrl(slot)" [alt]="col.name" />
               } @else {
                 <div class="mosaic-cell mosaic-placeholder"></div>
               }

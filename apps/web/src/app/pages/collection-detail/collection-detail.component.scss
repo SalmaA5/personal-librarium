@@ -292,8 +292,8 @@
   color: var(--color-accent);
 
   &.read {
-    background: color-mix(in srgb, #4caf50 12%, transparent);
-    color: #4caf50;
+    background: var(--color-accent-soft);
+    color: var(--color-accent-sec);
   }
 
   &.reading {

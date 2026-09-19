@@ -1,17 +1,17 @@
-import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { inject, Injectable } from '@angular/core';
 import {
   Book,
   BookDetail,
   BookFilters,
   CreateBookDto,
-  UpdateBookDto,
-  ReadingProgress,
-  UpdateProgressDto,
   PaginatedResponse,
-} from '@librarium/types';
-import { API_BASE_URL } from './api.config';
+  ReadingProgress,
+  UpdateBookDto,
+  UpdateProgressDto,
+} from '@libs/types';
+import { Observable } from 'rxjs';
+import { API_BASE_URL } from '../api.config';
 
 @Injectable({ providedIn: 'root' })
 export class BooksService {
@@ -62,14 +62,8 @@ export class BooksService {
     return this.http.get<ReadingProgress>(this.url(`/books/${id}/progress`));
   }
 
-  updateProgress(
-    id: number,
-    dto: UpdateProgressDto,
-  ): Observable<ReadingProgress> {
-    return this.http.patch<ReadingProgress>(
-      this.url(`/books/${id}/progress`),
-      dto,
-    );
+  updateProgress(id: number, dto: UpdateProgressDto): Observable<ReadingProgress> {
+    return this.http.patch<ReadingProgress>(this.url(`/books/${id}/progress`), dto);
   }
 
   resetProgress(bookId: number): Observable<void> {

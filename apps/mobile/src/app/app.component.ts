@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { IonApp, IonRouterOutlet } from '@ionic/angular';
-import { ThemeService } from '@librarium/utils';
+import { ThemeService } from '@libs/utils';
 
 @Component({
   selector: 'app-root',

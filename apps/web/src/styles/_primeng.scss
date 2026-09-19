@@ -1,0 +1,103 @@
+/* 1 — PrimeNG design-token overrides */
+:root {
+  // Primary / accent
+  --p-primary-50: var(--color-accent-soft);
+  --p-primary-100: var(--color-accent-soft);
+  --p-primary-200: var(--color-accent-soft);
+  --p-primary-300: var(--color-accent-sec);
+  --p-primary-400: var(--color-accent-sec);
+  --p-primary-500: var(--color-accent);
+  --p-primary-600: var(--color-accent);
+  --p-primary-700: var(--color-accent);
+  --p-primary-800: var(--color-accent);
+  --p-primary-900: var(--color-accent);
+  --p-primary-950: var(--color-accent);
+  --p-primary-color: var(--color-accent);
+  --p-primary-contrast-color: #ffffff;
+
+  // Surfaces
+  --p-surface-0: var(--color-bg-page);
+  --p-surface-50: var(--color-bg-page);
+  --p-surface-100: var(--color-bg-card);
+  --p-surface-200: var(--color-bg-card);
+  --p-surface-300: var(--color-border);
+  --p-surface-400: var(--color-border);
+  --p-surface-500: var(--color-text-secondary);
+  --p-surface-600: var(--color-text-secondary);
+  --p-surface-700: var(--color-text-primary);
+  --p-surface-800: var(--color-text-primary);
+  --p-surface-900: var(--color-text-primary);
+  --p-surface-950: var(--color-text-primary);
+
+  // Content
+  --p-content-background: var(--color-bg-card);
+  --p-content-border-color: var(--color-border);
+  --p-content-color: var(--color-text-primary);
+  --p-text-color: var(--color-text-primary);
+  --p-text-muted-color: var(--color-text-secondary);
+
+  // Highlight
+  --p-highlight-background: var(--color-accent-soft);
+  --p-highlight-color: var(--color-accent);
+  --p-highlight-focus-background: var(--color-accent-soft);
+  --p-highlight-focus-color: var(--color-accent);
+
+  // Inputs
+  --p-inputtext-background: var(--color-bg-card);
+  --p-inputtext-border-color: var(--color-border);
+  --p-inputtext-color: var(--color-text-primary);
+  --p-inputtext-focus-border-color: var(--color-accent);
+  --p-inputtext-placeholder-color: var(--color-text-secondary);
+
+  // Select / Dropdown
+  --p-select-background: var(--color-bg-card);
+  --p-select-border-color: var(--color-border);
+  --p-select-color: var(--color-text-primary);
+  --p-select-overlay-background: var(--color-bg-card);
+  --p-select-overlay-border-color: var(--color-border);
+  --p-select-option-color: var(--color-text-primary);
+  --p-select-option-focus-background: var(--color-accent-soft);
+  --p-select-option-focus-color: var(--color-accent);
+  --p-select-option-selected-background: var(--color-accent-soft);
+  --p-select-option-selected-color: var(--color-accent);
+  --p-select-option-selected-focus-background: var(--color-accent-soft);
+  --p-select-option-selected-focus-color: var(--color-accent);
+
+  // Overlay panels
+  --p-overlay-popover-background: var(--color-bg-card);
+  --p-overlay-popover-border-color: var(--color-border);
+  --p-overlay-popover-color: var(--color-text-primary);
+}
+
+/* 2 — p-select full-width helper */
+.p-select-full {
+  width: 100%;
+}
+
+/* 3 — p-select overlay force: PrimeNG injects its styles after styles.scss loads,
+   so --p-select-overlay-background gets overridden. We use our own --color-* vars
+   (set via inline style by ThemeService, always highest priority) + !important to win. */
+.p-select-overlay {
+  background: var(--color-bg-card) !important;
+  border-color: var(--color-border) !important;
+  color: var(--color-text-primary) !important;
+}
+
+.p-select-option {
+  color: var(--color-text-primary) !important;
+}
+
+.p-select-option:not(.p-disabled).p-focus {
+  background: var(--color-accent-soft) !important;
+  color: var(--color-accent) !important;
+}
+
+.p-select-option.p-select-option-selected {
+  background: var(--color-accent-soft) !important;
+  color: var(--color-accent) !important;
+}
+
+.p-select-option.p-select-option-selected.p-focus {
+  background: var(--color-accent-soft) !important;
+  color: var(--color-accent) !important;
+}

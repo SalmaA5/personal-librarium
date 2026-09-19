@@ -1,8 +1,8 @@
-import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import type { CollectionType } from '@librarium/types';
+import { inject, Injectable } from '@angular/core';
+import type { CollectionType } from '@libs/types';
 import type { Observable } from 'rxjs';
-import { API_BASE_URL } from './api.config';
+import { API_BASE_URL } from '../api.config';
 
 @Injectable({ providedIn: 'root' })
 export class CollectionTypesService {
@@ -24,10 +24,7 @@ export class CollectionTypesService {
   }
 
   update(id: number, name: string): Observable<CollectionType> {
-    return this.http.patch<CollectionType>(
-      this.url(`/collection-types/${id}`),
-      { name },
-    );
+    return this.http.patch<CollectionType>(this.url(`/collection-types/${id}`), { name });
   }
 
   remove(id: number): Observable<void> {

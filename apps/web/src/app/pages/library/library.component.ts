@@ -1,16 +1,21 @@
 import { Component, computed, effect, inject, signal } from '@angular/core';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
-import { debounceTime, firstValueFrom } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
+import { BooksService, MetadataService } from '@libs/api-client';
+import { BookFormat, BookStatus } from '@libs/types';
+import {
+  BookCardComponent,
+  FORM_IMPORTS,
+  PRIMENG_IMPORTS,
+  ROUTER_IMPORTS,
+} from '@libs/ui-shared';
 import { injectQuery } from '@tanstack/angular-query-experimental';
-import { BookFormat, BookStatus } from '@librarium/types';
-import { BooksService, MetadataService } from '@librarium/api-client';
-import { BookCardComponent } from '@librarium/ui-shared';
+import { debounceTime, firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-library',
   standalone: true,
-  imports: [RouterLink, BookCardComponent],
+  imports: [BookCardComponent, ROUTER_IMPORTS, FORM_IMPORTS, PRIMENG_IMPORTS],
   templateUrl: './library.component.html',
   styleUrl: './library.component.scss',
 })
@@ -24,15 +29,37 @@ export default class LibraryComponent {
   readonly genreFilter = signal('');
   readonly formatFilter = signal('');
   readonly statusFilter = signal('');
-  readonly sortBy = signal<'title' | 'author' | 'createdAt' | 'lastRead'>(
-    'createdAt',
-  );
+  readonly sortBy = signal<'title' | 'author' | 'createdAt' | 'lastRead'>('createdAt');
   readonly orderDir = signal<'asc' | 'desc'>('desc');
   readonly currentPage = signal(1);
 
+  readonly formatOptions = [
+    { label: 'Todos los formatos', value: '' },
+    { label: 'EPUB', value: 'epub' },
+    { label: 'PDF', value: 'pdf' },
+    { label: 'HTML', value: 'html' },
+    { label: 'CBZ', value: 'cbz' },
+  ];
+  readonly statusOptions = [
+    { label: 'Todos los estados', value: '' },
+    { label: 'Sin leer', value: 'unread' },
+    { label: 'Leyendo', value: 'reading' },
+    { label: 'Leído', value: 'read' },
+  ];
+  readonly sortOptions = [
+    { label: 'Fecha añadido', value: 'createdAt' },
+    { label: 'Título', value: 'title' },
+    { label: 'Autor', value: 'author' },
+    { label: 'Última lectura', value: 'lastRead' },
+  ];
+  readonly orderOptions = [
+    { label: '↓ Desc', value: 'desc' },
+    { label: '↑ Asc', value: 'asc' },
+  ];
+
   readonly debouncedSearch = toSignal(
     toObservable(this.searchInput).pipe(debounceTime(300)),
-    { initialValue: '' },
+    { initialValue: '' }
   );
 
   readonly hasActiveFilters = computed(
@@ -42,7 +69,7 @@ export default class LibraryComponent {
         this.genreFilter() ||
         this.formatFilter() ||
         this.statusFilter()
-      ),
+      )
   );
 
   readonly totalPages = computed(() => {
@@ -55,6 +82,14 @@ export default class LibraryComponent {
     queryFn: () => firstValueFrom(this.metadataService.getGenres()),
     staleTime: 5 * 60 * 1000,
   }));
+
+  readonly genreOptions = computed(() => [
+    { label: 'Todos los géneros', value: '' },
+    ...(this.genresQuery.data() ?? []).map((g) => ({
+      label: `${g.name} (${g.count})`,
+      value: g.name,
+    })),
+  ]);
 
   readonly booksQuery = injectQuery(() => ({
     queryKey: [
@@ -80,7 +115,7 @@ export default class LibraryComponent {
           order: this.orderDir(),
           page: this.currentPage(),
           limit: 20,
-        }),
+        })
       ),
   }));
 
@@ -91,8 +126,7 @@ export default class LibraryComponent {
     this.formatFilter.set(params.get('format') ?? '');
     this.statusFilter.set(params.get('status') ?? '');
     const sort = params.get('sort');
-    if (sort)
-      this.sortBy.set(sort as 'title' | 'author' | 'createdAt' | 'lastRead');
+    if (sort) this.sortBy.set(sort as 'title' | 'author' | 'createdAt' | 'lastRead');
     const order = params.get('order');
     if (order) this.orderDir.set(order as 'asc' | 'desc');
     const page = params.get('page');
@@ -131,7 +165,7 @@ export default class LibraryComponent {
 
   onFilterChange(
     filter: 'genre' | 'format' | 'status' | 'sort' | 'order',
-    value: string,
+    value: string
   ): void {
     if (filter === 'genre') this.genreFilter.set(value);
     else if (filter === 'format') this.formatFilter.set(value);

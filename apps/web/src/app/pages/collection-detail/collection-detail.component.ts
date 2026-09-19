@@ -1,24 +1,25 @@
 import { Component, effect, inject, signal } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { map, firstValueFrom } from 'rxjs';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import {
+  BooksService,
+  CollectionTypesService,
+  CollectionsService,
+} from '@libs/api-client';
+import { CollectionBook } from '@libs/types';
+import { FORM_IMPORTS, PRIMENG_IMPORTS } from '@libs/ui-shared';
 import {
   injectMutation,
   injectQuery,
   injectQueryClient,
 } from '@tanstack/angular-query-experimental';
-import {
-  BooksService,
-  CollectionTypesService,
-  CollectionsService,
-} from '@librarium/api-client';
-import { CollectionBook } from '@librarium/types';
+import { firstValueFrom, map } from 'rxjs';
 
 @Component({
   selector: 'app-collection-detail',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [FORM_IMPORTS, PRIMENG_IMPORTS],
   templateUrl: './collection-detail.component.html',
   styleUrl: './collection-detail.component.scss',
 })
@@ -31,10 +32,9 @@ export default class CollectionDetailComponent {
   private readonly fb = inject(FormBuilder);
   private readonly queryClient = injectQueryClient();
 
-  readonly id = toSignal(
-    this.route.paramMap.pipe(map((p) => Number(p.get('id') ?? 0))),
-    { initialValue: Number(this.route.snapshot.paramMap.get('id') ?? 0) },
-  );
+  readonly id = toSignal(this.route.paramMap.pipe(map((p) => Number(p.get('id') ?? 0))), {
+    initialValue: Number(this.route.snapshot.paramMap.get('id') ?? 0),
+  });
 
   readonly detailQuery = injectQuery(() => ({
     queryKey: ['collection', this.id()],
@@ -67,7 +67,7 @@ export default class CollectionDetailComponent {
     queryKey: ['books-search', this.debouncedSearch()],
     queryFn: () =>
       firstValueFrom(
-        this.booksService.getAll({ search: this.debouncedSearch(), limit: 8 }),
+        this.booksService.getAll({ search: this.debouncedSearch(), limit: 8 })
       ),
     enabled: this.debouncedSearch().trim().length > 1,
   }));
@@ -101,7 +101,7 @@ export default class CollectionDetailComponent {
         this.collectionsService.addBook(this.id(), {
           bookId,
           order: this.localBooks().length + 1,
-        }),
+        })
       ),
     onSuccess: () => {
       this.queryClient.invalidateQueries({
@@ -116,9 +116,7 @@ export default class CollectionDetailComponent {
 
   readonly reorderMutation = injectMutation(() => ({
     mutationFn: (books: { bookId: number; order: number }[]) =>
-      firstValueFrom(
-        this.collectionsService.reorderBooks(this.id(), { books }),
-      ),
+      firstValueFrom(this.collectionsService.reorderBooks(this.id(), { books })),
   }));
 
   readonly deleteMutation = injectMutation(() => ({
@@ -182,9 +180,7 @@ export default class CollectionDetailComponent {
   }
 
   deleteCollection(): void {
-    if (
-      confirm('¿Eliminar esta colección? Esta acción no se puede deshacer.')
-    ) {
+    if (confirm('¿Eliminar esta colección? Esta acción no se puede deshacer.')) {
       this.deleteMutation.mutate();
     }
   }

@@ -1,14 +1,14 @@
 import { Component, computed, inject } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { BooksService, StatsService } from '@libs/api-client';
+import { Book } from '@libs/types';
+import { ROUTER_IMPORTS } from '@libs/ui-shared';
 import { injectQuery } from '@tanstack/angular-query-experimental';
 import { firstValueFrom } from 'rxjs';
-import { Book } from '@librarium/types';
-import { BooksService, StatsService } from '@librarium/api-client';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [RouterLink],
+  imports: [ROUTER_IMPORTS],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
 })
@@ -30,7 +30,7 @@ export default class DashboardComponent {
           sort: 'lastRead',
           order: 'desc',
           limit: 3,
-        }),
+        })
       ),
   }));
 
@@ -42,7 +42,7 @@ export default class DashboardComponent {
           sort: 'createdAt',
           order: 'desc',
           limit: 8,
-        }),
+        })
       ),
   }));
 

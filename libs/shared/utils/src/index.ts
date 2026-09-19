@@ -1,3 +1,4 @@
-export * from './lib/utils.js';
-export * from './lib/theme/theme.tokens.js';
 export * from './lib/theme/theme.service.js';
+export * from './lib/theme/theme.tokens.js';
+export * from './lib/theme/theme.types.js';
+export * from './lib/utils.js';

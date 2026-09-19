@@ -1,11 +1,11 @@
 import { Component, computed, input } from '@angular/core';
-import { RouterLink } from '@angular/router';
-import { Book } from '@librarium/types';
+import { Book } from '@libs/types';
+import { ROUTER_IMPORTS } from '../shared_imports';
 
 @Component({
   selector: 'lib-book-card',
   standalone: true,
-  imports: [RouterLink],
+  imports: [ROUTER_IMPORTS],
   templateUrl: './book-card.component.html',
   styleUrl: './book-card.component.scss',
 })

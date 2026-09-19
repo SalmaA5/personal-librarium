@@ -8,21 +8,16 @@
 
     <!-- Header -->
     <div class="header">
-      <button class="btn-back" type="button" (click)="goBack()">
-        ← Volver
-      </button>
+      <button class="btn-back" type="button" (click)="goBack()">← Volver</button>
       @if (!showEditForm()) {
         <h1 class="col-title">{{ col.name }}</h1>
         <div class="header-actions">
-          <button class="btn-icon" type="button" (click)="openEdit()">
-            Editar
-          </button>
+          <button class="btn-icon" type="button" (click)="openEdit()">Editar</button>
           <button
             class="btn-icon danger"
             type="button"
             (click)="deleteCollection()"
-            [disabled]="deleteMutation.isPending()"
-          >
+            [disabled]="deleteMutation.isPending()">
             ×
           </button>
         </div>
@@ -46,19 +41,19 @@
           <div class="field">
             <label class="label">Nombre <span class="req">*</span></label>
             <input class="input" type="text" formControlName="name" />
-            @if (
-              editForm.get('name')?.invalid && editForm.get('name')?.touched
-            ) {
+            @if (editForm.get('name')?.invalid && editForm.get('name')?.touched) {
               <span class="error">El nombre es obligatorio</span>
             }
           </div>
           <div class="field">
             <label class="label">Tipo</label>
-            <select class="input" formControlName="typeId">
-              @for (t of typesQuery.data() ?? []; track t.id) {
-                <option [value]="t.id">{{ t.name }}</option>
-              }
-            </select>
+            <p-select
+              [options]="typesQuery.data() ?? []"
+              optionLabel="name"
+              optionValue="id"
+              formControlName="typeId"
+              placeholder="Seleccionar tipo"
+              styleClass="p-select-full" />
           </div>
         </div>
         <div class="field">
@@ -69,11 +64,7 @@
           <button type="button" class="btn-cancel" (click)="cancelEdit()">
             Cancelar
           </button>
-          <button
-            type="submit"
-            class="btn-save"
-            [disabled]="updateMutation.isPending()"
-          >
+          <button type="submit" class="btn-save" [disabled]="updateMutation.isPending()">
             {{ updateMutation.isPending() ? 'Guardando...' : 'Guardar' }}
           </button>
         </div>
@@ -91,15 +82,13 @@
           draggable="true"
           (dragstart)="onDragStart(i)"
           (dragover)="onDragOver($event, i)"
-          (drop)="onDrop()"
-        >
+          (drop)="onDrop()">
           <span class="drag-handle">⠿</span>
           @if (book.coverUrl) {
             <img
               class="book-cover"
               [src]="getCoverUrl(book.coverUrl)"
-              [alt]="book.title"
-            />
+              [alt]="book.title" />
           } @else {
             <div class="book-cover cover-placeholder"></div>
           }
@@ -118,8 +107,7 @@
             class="btn-remove"
             type="button"
             (click)="removeBook(book.bookId)"
-            [disabled]="removeMutation.isPending()"
-          >
+            [disabled]="removeMutation.isPending()">
             ×
           </button>
         </div>
@@ -143,8 +131,7 @@
             type="text"
             placeholder="Buscar libro..."
             [value]="addBookSearch()"
-            (input)="setSearch($any($event.target).value)"
-          />
+            (input)="setSearch($any($event.target).value)" />
           @if (searchQuery.isFetching()) {
             <span class="searching">Buscando...</span>
           }
@@ -154,26 +141,20 @@
                 <button
                   class="search-result"
                   type="button"
-                  [disabled]="
-                    isBookInCollection(book.id) || addMutation.isPending()
-                  "
-                  (click)="addBook(book.id)"
-                >
+                  [disabled]="isBookInCollection(book.id) || addMutation.isPending()"
+                  (click)="addBook(book.id)">
                   @if (book.coverUrl) {
                     <img
                       class="result-cover"
                       [src]="getCoverUrl(book.coverUrl)"
-                      [alt]="book.title"
-                    />
+                      [alt]="book.title" />
                   } @else {
                     <div class="result-cover cover-placeholder"></div>
                   }
                   <div class="result-info">
                     <span class="result-title">{{ book.title }}</span>
                     @if (book.authors && book.authors.length > 0) {
-                      <span class="result-author">{{
-                        book.authors[0].name
-                      }}</span>
+                      <span class="result-author">{{ book.authors[0].name }}</span>
                     }
                   </div>
                   @if (isBookInCollection(book.id)) {
@@ -182,9 +163,7 @@
                 </button>
               }
             </div>
-          } @else if (
-            debouncedSearch().trim().length > 1 && !searchQuery.isFetching()
-          ) {
+          } @else if (debouncedSearch().trim().length > 1 && !searchQuery.isFetching()) {
             <p class="no-results">Sin resultados</p>
           }
         </div>

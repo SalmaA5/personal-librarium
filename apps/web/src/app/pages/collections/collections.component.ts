@@ -1,22 +1,23 @@
 import { Component, inject, signal } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { firstValueFrom } from 'rxjs';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  BooksService,
+  CollectionsService,
+  CollectionTypesService,
+} from '@libs/api-client';
+import { FORM_IMPORTS, PRIMENG_IMPORTS } from '@libs/ui-shared';
 import {
   injectMutation,
   injectQuery,
-  injectQueryClient,
+  QueryClient,
 } from '@tanstack/angular-query-experimental';
-import {
-  BooksService,
-  CollectionTypesService,
-  CollectionsService,
-} from '@librarium/api-client';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-collections',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [FORM_IMPORTS, PRIMENG_IMPORTS],
   templateUrl: './collections.component.html',
   styleUrl: './collections.component.scss',
 })
@@ -26,7 +27,7 @@ export default class CollectionsComponent {
   private readonly booksService = inject(BooksService);
   private readonly router = inject(Router);
   private readonly fb = inject(FormBuilder);
-  private readonly queryClient = injectQueryClient();
+  private readonly queryClient = inject(QueryClient);
 
   readonly filterTypeId = signal<number | null>(null);
   readonly showCreateForm = signal(false);
@@ -41,10 +42,8 @@ export default class CollectionsComponent {
     queryFn: () =>
       firstValueFrom(
         this.collectionsService.getAll(
-          this.filterTypeId() !== null
-            ? { typeId: this.filterTypeId()! }
-            : undefined,
-        ),
+          this.filterTypeId() !== null ? { typeId: this.filterTypeId()! } : undefined
+        )
       ),
   }));
 

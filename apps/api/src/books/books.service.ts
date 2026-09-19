@@ -248,7 +248,7 @@ export class BooksService {
           .select({
             id: collection.id,
             name: collection.name,
-            type: collection.type,
+            typeId: collection.typeId,
             order: bookCollection.order,
           })
           .from(bookCollection)

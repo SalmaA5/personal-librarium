@@ -34,11 +34,15 @@ export class AuthService implements OnModuleInit {
   }
 
   async onModuleInit() {
-    const stored = await this.loadTokens();
-    if (stored) {
-      this.oauth2Client.setCredentials(stored);
-      this.logger.log('Google credentials loaded from database');
-      return;
+    try {
+      const stored = await this.loadTokens();
+      if (stored) {
+        this.oauth2Client.setCredentials(stored);
+        this.logger.log('Google credentials loaded from database');
+        return;
+      }
+    } catch (err) {
+      this.logger.warn(`Could not load Google tokens from DB: ${err}`);
     }
 
     const envRefreshToken = this.config.get<string>('GOOGLE_REFRESH_TOKEN');

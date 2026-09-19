@@ -5,6 +5,7 @@ import { AppService } from './app.service';
 import { DatabaseModule } from '../db/database.module';
 import { AuthModule } from '../auth/auth.module';
 import { BooksModule } from '../books/books.module';
+import { CollectionTypesModule } from '../collection-types/collection-types.module';
 import { CollectionsModule } from '../collections/collections.module';
 import { ReaderModule } from '../reader/reader.module';
 import { ProgressModule } from '../progress/progress.module';
@@ -19,6 +20,7 @@ import { StatsModule } from '../stats/stats.module';
     DatabaseModule,
     AuthModule,
     BooksModule,
+    CollectionTypesModule,
     CollectionsModule,
     ReaderModule,
     ProgressModule,

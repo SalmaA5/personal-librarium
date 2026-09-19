@@ -1,22 +1,42 @@
-import { Book } from './book.types.js';
+import type { Author, ReadingProgress } from './book.types.js';
 
-export type CollectionType = 'series' | 'anthology' | 'thematic';
+export interface CollectionType {
+  id: number;
+  name: string;
+}
 
 export interface Collection {
   id: number;
   name: string;
   description: string | null;
-  type: CollectionType;
+  typeId: number;
+  typeName: string;
+  bookCount: number;
+  covers: string[];
 }
 
-export interface CollectionDetail extends Collection {
-  books: Book[];
+export interface CollectionBook {
+  bookId: number;
+  order: number | null;
+  title: string;
+  coverUrl: string | null;
+  authors: Author[];
+  progress: ReadingProgress | null;
+}
+
+export interface CollectionDetail {
+  id: number;
+  name: string;
+  description: string | null;
+  typeId: number;
+  typeName: string;
+  books: CollectionBook[];
 }
 
 export interface CreateCollectionDto {
   name: string;
   description?: string;
-  type: CollectionType;
+  typeId: number;
 }
 
 export interface UpdateCollectionDto extends Partial<CreateCollectionDto> {}

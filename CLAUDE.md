@@ -42,6 +42,10 @@ libs/
   ui/mobile          @librarium/ui-mobile  — mobile-only components
 ```
 
+## Shell conventions
+
+- **git, gh, pnpm**: siempre usar PowerShell o cmd para estos comandos. Nunca Bash/Git Bash para ellos.
+
 ## Key conventions
 
 - **Package manager**: always `pnpm`. Use `pnpm add -w` for workspace-root deps.

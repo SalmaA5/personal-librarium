@@ -22,11 +22,18 @@ export const tag = sqliteTable('tag', {
   name: text('name').notNull(),
 });
 
+export const collectionType = sqliteTable('collection_type', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  name: text('name').notNull().unique(),
+});
+
 export const collection = sqliteTable('collection', {
   id: integer('id').primaryKey({ autoIncrement: true }),
   name: text('name').notNull(),
   description: text('description'),
-  type: text('type', { enum: ['series', 'anthology', 'thematic'] }).notNull(),
+  typeId: integer('type_id')
+    .notNull()
+    .references(() => collectionType.id),
 });
 
 export const book = sqliteTable('book', {

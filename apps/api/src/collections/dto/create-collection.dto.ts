@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsEnum, IsOptional, IsString } from 'class-validator';
+import { IsInt, IsOptional, IsString } from 'class-validator';
 
 export class CreateCollectionDto {
   @ApiProperty()
@@ -11,7 +11,7 @@ export class CreateCollectionDto {
   @IsString()
   description?: string;
 
-  @ApiProperty({ enum: ['series', 'anthology', 'thematic'] })
-  @IsEnum(['series', 'anthology', 'thematic'])
-  type!: 'series' | 'anthology' | 'thematic';
+  @ApiProperty({ description: 'ID of the collection type' })
+  @IsInt()
+  typeId!: number;
 }

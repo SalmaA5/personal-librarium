@@ -33,16 +33,12 @@ export class CollectionsController {
 
   @Get()
   @ApiOperation({ summary: 'List all collections' })
-  @ApiQuery({
-    name: 'type',
-    required: false,
-    enum: ['series', 'anthology', 'thematic'],
-  })
+  @ApiQuery({ name: 'typeId', required: false, type: Number })
   @ApiOkResponse({
     description: 'List of collections with book count and cover thumbnails',
   })
-  findAll(@Query('type') type?: string) {
-    return this.collectionsService.findAll(type);
+  findAll(@Query('typeId') typeId?: string) {
+    return this.collectionsService.findAll(typeId ? Number(typeId) : undefined);
   }
 
   @Get(':id')

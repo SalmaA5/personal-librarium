@@ -15,6 +15,20 @@
       "when": 1789485818349,
       "tag": "0001_natural_solo",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1758153600000,
+      "tag": "0002_collection_type",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1758240000000,
+      "tag": "0003_fix_collection_schema",
+      "breakpoints": true
     }
   ]
 }

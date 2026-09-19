@@ -1,19 +1,12 @@
 import { Injectable, signal } from '@angular/core';
-import {
-  THEME_TOKENS,
-  ThemeConfig,
-  ThemePalette,
-  ThemeMode,
-} from './theme.tokens.js';
+import { THEME_TOKENS } from './theme.tokens.js';
+import { ThemeConfig, ThemeMode, ThemePalette } from './theme.types.js';
 
 const STORAGE_KEY = 'librarium-theme';
 
 @Injectable({ providedIn: 'root' })
 export class ThemeService {
-  readonly currentTheme = signal<ThemeConfig>({
-    palette: 'teal',
-    mode: 'dark',
-  });
+  readonly currentTheme = signal<ThemeConfig>({ palette: 'teal', mode: 'dark' });
 
   private _mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
   private _systemListener = (e: MediaQueryListEvent) => {
@@ -65,6 +58,29 @@ export class ThemeService {
     root.style.setProperty('--color-text-primary', tokens.textPrimary);
     root.style.setProperty('--color-text-secondary', tokens.textSecondary);
     root.style.setProperty('--color-border', tokens.border);
+
+    // PrimeNG token sync — keeps PrimeNG in sync with the active theme
+    root.style.setProperty('--p-primary-color', tokens.accent);
+    root.style.setProperty('--p-primary-500', tokens.accent);
+    root.style.setProperty('--p-primary-300', tokens.accentSec);
+    root.style.setProperty('--p-highlight-background', tokens.accentSoft);
+    root.style.setProperty('--p-highlight-color', tokens.accent);
+    root.style.setProperty('--p-content-background', tokens.bgCard);
+    root.style.setProperty('--p-surface-0', tokens.bgPage);
+    root.style.setProperty('--p-surface-100', tokens.bgCard);
+    root.style.setProperty('--p-text-color', tokens.textPrimary);
+    root.style.setProperty('--p-text-muted-color', tokens.textSecondary);
+    root.style.setProperty('--p-content-border-color', tokens.border);
+    root.style.setProperty('--p-inputtext-background', tokens.bgCard);
+    root.style.setProperty('--p-inputtext-border-color', tokens.border);
+    root.style.setProperty('--p-inputtext-color', tokens.textPrimary);
+    root.style.setProperty('--p-select-background', tokens.bgCard);
+    root.style.setProperty('--p-select-border-color', tokens.border);
+    root.style.setProperty('--p-select-color', tokens.textPrimary);
+    root.style.setProperty('--p-select-overlay-background', tokens.bgCard);
+    root.style.setProperty('--p-select-option-color', tokens.textPrimary);
+    root.style.setProperty('--p-select-option-selected-background', tokens.accentSoft);
+    root.style.setProperty('--p-select-option-selected-color', tokens.accent);
 
     // Ionic variable mapping — keeps mobile in sync without extra config
     root.style.setProperty('--ion-color-primary', tokens.accent);

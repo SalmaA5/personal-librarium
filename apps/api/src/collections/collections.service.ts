@@ -8,6 +8,7 @@ import {
   bookAuthor,
   bookCollection,
   collection,
+  collectionType,
   readingProgress,
 } from '../db/schema';
 import { AddBookDto } from './dto/add-book.dto';
@@ -19,15 +20,18 @@ import { UpdateCollectionDto } from './dto/update-collection.dto';
 export class CollectionsService {
   constructor(@Inject(DRIZZLE) private readonly db: DrizzleClient) {}
 
-  async findAll(type?: string) {
+  async findAll(typeId?: number) {
     const rows = await this.db
-      .select()
+      .select({
+        id: collection.id,
+        name: collection.name,
+        description: collection.description,
+        typeId: collection.typeId,
+        typeName: collectionType.name,
+      })
       .from(collection)
-      .where(
-        type
-          ? eq(collection.type, type as 'series' | 'anthology' | 'thematic')
-          : undefined,
-      )
+      .innerJoin(collectionType, eq(collectionType.id, collection.typeId))
+      .where(typeId ? eq(collection.typeId, typeId) : undefined)
       .orderBy(asc(collection.name));
 
     if (rows.length === 0) return [];
@@ -75,8 +79,15 @@ export class CollectionsService {
 
   async findOne(id: number) {
     const [found] = await this.db
-      .select()
+      .select({
+        id: collection.id,
+        name: collection.name,
+        description: collection.description,
+        typeId: collection.typeId,
+        typeName: collectionType.name,
+      })
       .from(collection)
+      .innerJoin(collectionType, eq(collectionType.id, collection.typeId))
       .where(eq(collection.id, id))
       .limit(1);
 
@@ -135,7 +146,7 @@ export class CollectionsService {
       .values({
         name: dto.name,
         description: dto.description,
-        type: dto.type,
+        typeId: dto.typeId,
       })
       .returning();
     return created;
@@ -155,7 +166,7 @@ export class CollectionsService {
       .set({
         ...(dto.name !== undefined && { name: dto.name }),
         ...(dto.description !== undefined && { description: dto.description }),
-        ...(dto.type !== undefined && { type: dto.type }),
+        ...(dto.typeId !== undefined && { typeId: dto.typeId }),
       })
       .where(eq(collection.id, id))
       .returning();
@@ -182,8 +193,7 @@ export class CollectionsService {
       .where(eq(collection.id, collectionId))
       .limit(1);
 
-    if (!col)
-      throw new NotFoundException(`Collection ${collectionId} not found`);
+    if (!col) throw new NotFoundException(`Collection ${collectionId} not found`);
 
     const [b] = await this.db
       .select({ id: book.id })
@@ -199,8 +209,8 @@ export class CollectionsService {
       .where(
         and(
           eq(bookCollection.collectionId, collectionId),
-          eq(bookCollection.bookId, dto.bookId),
-        ),
+          eq(bookCollection.bookId, dto.bookId)
+        )
       )
       .limit(1);
 
@@ -211,8 +221,8 @@ export class CollectionsService {
         .where(
           and(
             eq(bookCollection.collectionId, collectionId),
-            eq(bookCollection.bookId, dto.bookId),
-          ),
+            eq(bookCollection.bookId, dto.bookId)
+          )
         );
     } else {
       await this.db
@@ -228,23 +238,21 @@ export class CollectionsService {
       .where(
         and(
           eq(bookCollection.collectionId, collectionId),
-          eq(bookCollection.bookId, bookId),
-        ),
+          eq(bookCollection.bookId, bookId)
+        )
       )
       .limit(1);
 
     if (!existing)
-      throw new NotFoundException(
-        `Book ${bookId} not in collection ${collectionId}`,
-      );
+      throw new NotFoundException(`Book ${bookId} not in collection ${collectionId}`);
 
     await this.db
       .delete(bookCollection)
       .where(
         and(
           eq(bookCollection.collectionId, collectionId),
-          eq(bookCollection.bookId, bookId),
-        ),
+          eq(bookCollection.bookId, bookId)
+        )
       );
   }
 
@@ -255,8 +263,7 @@ export class CollectionsService {
       .where(eq(collection.id, collectionId))
       .limit(1);
 
-    if (!col)
-      throw new NotFoundException(`Collection ${collectionId} not found`);
+    if (!col) throw new NotFoundException(`Collection ${collectionId} not found`);
 
     await this.db.transaction(async (tx) => {
       for (const { bookId, order } of dto.books) {
@@ -266,8 +273,8 @@ export class CollectionsService {
           .where(
             and(
               eq(bookCollection.collectionId, collectionId),
-              eq(bookCollection.bookId, bookId),
-            ),
+              eq(bookCollection.bookId, bookId)
+            )
           );
       }
     });

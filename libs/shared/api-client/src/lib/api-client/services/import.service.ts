@@ -1,8 +1,8 @@
-import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { inject, Injectable } from '@angular/core';
+import { BookDetail } from '@libs/types';
 import { Observable } from 'rxjs';
-import { BookDetail } from '@librarium/types';
-import { API_BASE_URL } from './api.config';
+import { API_BASE_URL } from '../api.config';
 
 @Injectable({ providedIn: 'root' })
 export class ImportService {

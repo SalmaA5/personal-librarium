@@ -1,13 +1,8 @@
 import { Component, inject } from '@angular/core';
-import {
-  Router,
-  RouterLink,
-  RouterLinkActive,
-  RouterOutlet,
-  NavigationEnd,
-} from '@angular/router';
-import { filter, map } from 'rxjs/operators';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
+import { ROUTER_IMPORTS } from '@libs/ui-shared';
+import { filter, map } from 'rxjs/operators';
 
 const NAV_ITEMS = [
   { label: 'Dashboard', path: '/dashboard', icon: 'pi pi-home' },
@@ -36,7 +31,7 @@ function titleFromUrl(url: string): string {
 @Component({
   selector: 'app-shell',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive],
+  imports: [RouterOutlet, ROUTER_IMPORTS],
   templateUrl: './shell.component.html',
   styleUrl: './shell.component.scss',
 })
@@ -48,17 +43,17 @@ export class ShellComponent {
   private readonly currentUrl = toSignal(
     this.router.events.pipe(
       filter((e) => e instanceof NavigationEnd),
-      map(() => this.router.url),
+      map(() => this.router.url)
     ),
-    { initialValue: this.router.url },
+    { initialValue: this.router.url }
   );
 
   readonly isReader = toSignal(
     this.router.events.pipe(
       filter((e) => e instanceof NavigationEnd),
-      map(() => this.router.url.includes('/read')),
+      map(() => this.router.url.includes('/read'))
     ),
-    { initialValue: this.router.url.includes('/read') },
+    { initialValue: this.router.url.includes('/read') }
   );
 
   pageTitle(): string {

@@ -19,12 +19,12 @@ apps/
   web/      Angular browser reader
   mobile/   Ionic + Capacitor mobile app
 libs/
-  shared/types       @librarium/types       Shared TypeScript interfaces
-  shared/api-client  @librarium/api-client  Angular HTTP services
-  shared/utils       @librarium/utils       ThemeService + pure utilities
-  ui/shared          @librarium/ui-shared   Shared Angular components
-  ui/web             @librarium/ui-web      Web-only components
-  ui/mobile          @librarium/ui-mobile   Mobile-only components
+  shared/types       @libs/types       Shared TypeScript interfaces
+  shared/api-client  @libs/api-client  Angular HTTP services
+  shared/utils       @libs/utils       ThemeService + pure utilities
+  ui/shared          @libs/ui-shared   Shared Angular components
+  ui/web             @libs/ui-web      Web-only components
+  ui/mobile          @libs/ui-mobile   Mobile-only components
 ```
 
 ## Getting started
@@ -233,7 +233,7 @@ Migrations / push: `drizzle-kit` configured in `drizzle.config.ts`
 
 ## Themes
 
-Four built-in themes managed by `ThemeService` (`@librarium/utils`):
+Four built-in themes managed by `ThemeService` (`@libs/utils`):
 
 | Key           | Description |
 | ------------- | ----------- |

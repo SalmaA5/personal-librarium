@@ -1,0 +1,108 @@
+<div class="collections-page">
+  <div class="page-header">
+    <div class="filters">
+      <button
+        class="filter-btn"
+        [class.active]="filterTypeId() === null"
+        (click)="setFilter(null)">
+        Todas
+      </button>
+      @for (t of typesQuery.data() ?? []; track t.id) {
+        <button
+          class="filter-btn"
+          [class.active]="filterTypeId() === t.id"
+          (click)="setFilter(t.id)">
+          {{ t.name }}
+        </button>
+      }
+    </div>
+    <button class="btn-new" (click)="openCreateForm()">+ Nueva</button>
+  </div>
+
+  @if (showCreateForm()) {
+    <form class="create-form" [formGroup]="createForm" (ngSubmit)="submitCreate()">
+      <h3 class="create-title">Nueva colección</h3>
+      <div class="form-row">
+        <div class="field">
+          <label class="label">Nombre <span class="req">*</span></label>
+          <input
+            class="input"
+            type="text"
+            formControlName="name"
+            placeholder="Nombre de la colección" />
+          @if (createForm.get('name')?.invalid && createForm.get('name')?.touched) {
+            <span class="error">El nombre es obligatorio</span>
+          }
+        </div>
+        <div class="field">
+          <label class="label">Tipo</label>
+          <p-select
+            [options]="typesQuery.data() ?? []"
+            optionLabel="name"
+            optionValue="id"
+            formControlName="typeId"
+            placeholder="Seleccionar tipo"
+            styleClass="p-select-full" />
+        </div>
+      </div>
+      <div class="field">
+        <label class="label">Descripción</label>
+        <input
+          class="input"
+          type="text"
+          formControlName="description"
+          placeholder="Descripción opcional" />
+      </div>
+      <div class="form-actions">
+        <button type="button" class="btn-cancel" (click)="cancelCreate()">
+          Cancelar
+        </button>
+        <button type="submit" class="btn-save" [disabled]="createMutation.isPending()">
+          {{ createMutation.isPending() ? 'Creando...' : 'Crear' }}
+        </button>
+      </div>
+    </form>
+  }
+
+  @if (collectionsQuery.isPending()) {
+    <div class="grid">
+      @for (i of [1, 2, 3, 4, 5, 6]; track i) {
+        <div class="card skeleton-card">
+          <div class="skeleton-mosaic"></div>
+          <div class="card-body">
+            <div class="skeleton-line wide"></div>
+            <div class="skeleton-line short"></div>
+          </div>
+        </div>
+      }
+    </div>
+  } @else if ((collectionsQuery.data() ?? []).length === 0) {
+    <div class="empty-state">
+      <p>No tienes colecciones todavía</p>
+      <button class="btn-new" (click)="openCreateForm()">+ Crear colección</button>
+    </div>
+  } @else {
+    <div class="grid">
+      @for (col of collectionsQuery.data()!; track col.id) {
+        <div class="card" (click)="navigate(col.id)">
+          <div class="mosaic">
+            @for (slot of coverSlots(col.covers); track $index) {
+              @if (slot) {
+                <img class="mosaic-cell" [src]="getCoverUrl(slot)" [alt]="col.name" />
+              } @else {
+                <div class="mosaic-cell mosaic-placeholder"></div>
+              }
+            }
+          </div>
+          <div class="card-body">
+            <span class="col-name">{{ col.name }}</span>
+            <div class="col-meta">
+              <span class="badge">{{ col.typeName }}</span>
+              <span class="book-count">{{ col.bookCount }} libros</span>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>

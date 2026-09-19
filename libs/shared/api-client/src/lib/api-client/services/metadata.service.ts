@@ -1,8 +1,8 @@
-import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { inject, Injectable } from '@angular/core';
+import { MetadataItem } from '@libs/types';
 import { Observable } from 'rxjs';
-import { MetadataItem } from '@librarium/types';
-import { API_BASE_URL } from './api.config.js';
+import { API_BASE_URL } from '../api.config';
 
 @Injectable({ providedIn: 'root' })
 export class MetadataService {

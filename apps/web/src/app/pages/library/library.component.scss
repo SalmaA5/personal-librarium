@@ -5,8 +5,20 @@
 }
 
 // ── Search ──
+.search-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+
+  .btn-primary {
+    flex-shrink: 0;
+  }
+}
+
 .search-wrap {
   position: relative;
+  flex: 1;
+  min-width: 0;
 
   .search-icon {
     position: absolute;
@@ -45,9 +57,7 @@
 .filter-row {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: 0.75rem;
-  flex-wrap: wrap;
 }
 
 .filters-left,
@@ -55,7 +65,12 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  flex-wrap: wrap;
+  min-width: 0;
+}
+
+.filters-right {
+  margin-left: auto;
+  flex-shrink: 0;
 }
 
 select {

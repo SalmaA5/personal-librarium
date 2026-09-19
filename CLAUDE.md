@@ -31,16 +31,20 @@ Personal digital library manager for books and manga. Stores metadata and readin
 ```
 apps/
   api/      NestJS 12 — REST API
-  web/      Angular 22 standalone — browser reader
+  web/      Angular 21 standalone — browser reader
   mobile/   Ionic 9 + Angular + Capacitor — mobile app
 libs/
-  shared/types       @librarium/types      — shared TS interfaces
-  shared/api-client  @librarium/api-client — Angular HTTP services
-  shared/utils       @librarium/utils      — ThemeService + pure utils
-  ui/shared          @librarium/ui-shared  — shared Angular components
-  ui/web             @librarium/ui-web     — web-only components
-  ui/mobile          @librarium/ui-mobile  — mobile-only components
+  shared/types       @libs/types      — shared TS interfaces
+  shared/api-client  @libs/api-client — Angular HTTP services
+  shared/utils       @libs/utils      — ThemeService + pure utils
+  ui/shared          @libs/ui-shared  — shared Angular components
+  ui/web             @libs/ui-web     — web-only components
+  ui/mobile          @libs/ui-mobile  — mobile-only components
 ```
+
+## Shell conventions
+
+- **git, gh, pnpm**: siempre usar PowerShell o cmd para estos comandos. Nunca Bash/Git Bash para ellos.
 
 ## Key conventions
 
@@ -62,7 +66,7 @@ Schema lives in `apps/api/src/db/schema.ts`. Tables:
 Connection factory: `apps/api/src/db/index.ts` → `createDrizzleClient(url, authToken)`.
 Env vars: `TURSO_URL`, `TURSO_AUTH_TOKEN` (see `.env.example`).
 
-## Theme system (`@librarium/utils`)
+## Theme system (`@libs/utils`)
 
 - **4 themes**: `teal-light`, `teal-dark` (default), `mauve-light`, `mauve-dark`
 - `ThemeService` — Angular signal `currentTheme`, methods `setTheme(palette, mode)` y `followSystem()`
@@ -74,7 +78,7 @@ Env vars: `TURSO_URL`, `TURSO_AUTH_TOKEN` (see `.env.example`).
 
 ## PrimeNG (web only)
 
-- Version 22 con Aura preset desde `@primeuix/themes/aura` (NO usar `@primeng/themes`, está deprecado)
+- Version 21 con Aura preset desde `@primeng/themes/aura` (paquete `@primeng/themes` instalado por separado)
 - Configured in `apps/web/src/app/app.config.ts` con `providePrimeNG` + `provideAnimationsAsync`
 - `darkModeSelector: 'none'` — tema controlado al 100% por ThemeService vía CSS variables
 - PrimeNG tokens (`--p-primary-color`, etc.) cascade desde `--color-*` vars in `styles.scss`

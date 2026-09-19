@@ -1,21 +1,22 @@
 import { Component, computed, effect, inject, signal } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { map } from 'rxjs/operators';
-import { firstValueFrom } from 'rxjs';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { BooksService, MetadataService } from '@libs/api-client';
+import { CreateBookDto } from '@libs/types';
+import { FORM_IMPORTS, PRIMENG_IMPORTS } from '@libs/ui-shared';
 import {
   injectMutation,
   injectQuery,
   injectQueryClient,
 } from '@tanstack/angular-query-experimental';
-import { CreateBookDto } from '@librarium/types';
-import { BooksService, MetadataService } from '@librarium/api-client';
+import { firstValueFrom } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-book-form',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [FORM_IMPORTS, PRIMENG_IMPORTS],
   templateUrl: './book-form.component.html',
   styleUrl: './book-form.component.scss',
 })
@@ -27,10 +28,9 @@ export default class BookFormComponent {
   private readonly route = inject(ActivatedRoute);
   private readonly queryClient = injectQueryClient();
 
-  readonly id = toSignal(
-    this.route.paramMap.pipe(map((p) => Number(p.get('id') ?? 0))),
-    { initialValue: Number(this.route.snapshot.paramMap.get('id') ?? 0) },
-  );
+  readonly id = toSignal(this.route.paramMap.pipe(map((p) => Number(p.get('id') ?? 0))), {
+    initialValue: Number(this.route.snapshot.paramMap.get('id') ?? 0),
+  });
 
   readonly isEditMode = computed(() => this.id() > 0);
 
@@ -98,9 +98,7 @@ export default class BookFormComponent {
       this.router.navigate(['/books', book.id]);
     },
     onError: (err: unknown) => {
-      this.saveError.set(
-        err instanceof Error ? err.message : 'Error al guardar',
-      );
+      this.saveError.set(err instanceof Error ? err.message : 'Error al guardar');
     },
   }));
 
@@ -166,7 +164,7 @@ export default class BookFormComponent {
 
   toggleGenre(name: string): void {
     this.selectedGenres.update((arr) =>
-      arr.includes(name) ? arr.filter((g) => g !== name) : [...arr, name],
+      arr.includes(name) ? arr.filter((g) => g !== name) : [...arr, name]
     );
   }
 
@@ -185,10 +183,7 @@ export default class BookFormComponent {
     this.genreInput.set('');
   }
 
-  onChipInputKeydown(
-    event: KeyboardEvent,
-    field: 'author' | 'tag' | 'genre',
-  ): void {
+  onChipInputKeydown(event: KeyboardEvent, field: 'author' | 'tag' | 'genre'): void {
     if (event.key === 'Enter') {
       event.preventDefault();
       if (field === 'author') this.addAuthor();
@@ -216,20 +211,12 @@ export default class BookFormComponent {
       title: raw.title!,
       ...(raw.synopsis ? { synopsis: raw.synopsis } : {}),
       ...(raw.driveFileId ? { driveFileId: raw.driveFileId } : {}),
-      ...(raw.format
-        ? { format: raw.format as 'epub' | 'pdf' | 'html' | 'cbz' }
-        : {}),
-      ...(raw.status
-        ? { status: raw.status as 'unread' | 'reading' | 'read' }
-        : {}),
+      ...(raw.format ? { format: raw.format as 'epub' | 'pdf' | 'html' | 'cbz' } : {}),
+      ...(raw.status ? { status: raw.status as 'unread' | 'reading' | 'read' } : {}),
       ...(raw.year != null ? { year: Number(raw.year) } : {}),
       ...(raw.publisher ? { publisher: raw.publisher } : {}),
-      ...(raw.totalChapters != null
-        ? { totalChapters: Number(raw.totalChapters) }
-        : {}),
-      ...(raw.totalVolumes != null
-        ? { totalVolumes: Number(raw.totalVolumes) }
-        : {}),
+      ...(raw.totalChapters != null ? { totalChapters: Number(raw.totalChapters) } : {}),
+      ...(raw.totalVolumes != null ? { totalVolumes: Number(raw.totalVolumes) } : {}),
       authors: this.authors(),
       tags: this.tags(),
       genres: this.selectedGenres(),

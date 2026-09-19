@@ -1,9 +1,4 @@
-import {
-  THEME_TOKENS,
-  ThemeConfig,
-  ThemePalette,
-  ThemeMode,
-} from '@librarium/utils';
+import { THEME_TOKENS, ThemeConfig, ThemeMode, ThemePalette } from '@libs/utils';
 
 const STORAGE_KEY = 'librarium-theme';
 
@@ -20,13 +15,34 @@ function applyTokens(palette: ThemePalette, mode: ThemeMode): void {
   root.style.setProperty('--color-text-primary', tokens.textPrimary);
   root.style.setProperty('--color-text-secondary', tokens.textSecondary);
   root.style.setProperty('--color-border', tokens.border);
+
+  root.style.setProperty('--p-primary-color', tokens.accent);
+  root.style.setProperty('--p-primary-500', tokens.accent);
+  root.style.setProperty('--p-primary-300', tokens.accentSec);
+  root.style.setProperty('--p-highlight-background', tokens.accentSoft);
+  root.style.setProperty('--p-highlight-color', tokens.accent);
+  root.style.setProperty('--p-content-background', tokens.bgCard);
+  root.style.setProperty('--p-surface-0', tokens.bgPage);
+  root.style.setProperty('--p-surface-100', tokens.bgCard);
+  root.style.setProperty('--p-text-color', tokens.textPrimary);
+  root.style.setProperty('--p-text-muted-color', tokens.textSecondary);
+  root.style.setProperty('--p-content-border-color', tokens.border);
+  root.style.setProperty('--p-inputtext-background', tokens.bgCard);
+  root.style.setProperty('--p-inputtext-border-color', tokens.border);
+  root.style.setProperty('--p-inputtext-color', tokens.textPrimary);
+  root.style.setProperty('--p-select-background', tokens.bgCard);
+  root.style.setProperty('--p-select-border-color', tokens.border);
+  root.style.setProperty('--p-select-color', tokens.textPrimary);
+  root.style.setProperty('--p-select-overlay-background', tokens.bgCard);
+  root.style.setProperty('--p-select-option-color', tokens.textPrimary);
+  root.style.setProperty('--p-select-option-selected-background', tokens.accentSoft);
+  root.style.setProperty('--p-select-option-selected-color', tokens.accent);
 }
 
 export function initTheme(): void {
   const saved = localStorage.getItem(STORAGE_KEY);
   let palette: ThemePalette = 'teal';
-  let mode: ThemeMode = window.matchMedia('(prefers-color-scheme: dark)')
-    .matches
+  let mode: ThemeMode = window.matchMedia('(prefers-color-scheme: dark)').matches
     ? 'dark'
     : 'light';
 

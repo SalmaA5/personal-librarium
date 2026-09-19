@@ -1,22 +1,22 @@
-import { Component, computed, inject, signal } from '@angular/core';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { SlicePipe } from '@angular/common';
-import { map } from 'rxjs/operators';
-import { firstValueFrom } from 'rxjs';
+import { Component, computed, inject, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { ActivatedRoute, Router } from '@angular/router';
+import { BooksService } from '@libs/api-client';
+import { Book, UpdateBookDto } from '@libs/types';
+import { BookCardComponent, ROUTER_IMPORTS } from '@libs/ui-shared';
 import {
   injectMutation,
   injectQuery,
   injectQueryClient,
 } from '@tanstack/angular-query-experimental';
-import { Book, UpdateBookDto } from '@librarium/types';
-import { BooksService } from '@librarium/api-client';
-import { BookCardComponent } from '@librarium/ui-shared';
+import { firstValueFrom } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-book-detail',
   standalone: true,
-  imports: [RouterLink, SlicePipe, BookCardComponent],
+  imports: [ROUTER_IMPORTS, SlicePipe, BookCardComponent],
   templateUrl: './book-detail.component.html',
   styleUrl: './book-detail.component.scss',
 })
@@ -26,10 +26,9 @@ export default class BookDetailComponent {
   private readonly route = inject(ActivatedRoute);
   private readonly queryClient = injectQueryClient();
 
-  readonly id = toSignal(
-    this.route.paramMap.pipe(map((p) => Number(p.get('id')))),
-    { initialValue: Number(this.route.snapshot.paramMap.get('id') ?? 0) },
-  );
+  readonly id = toSignal(this.route.paramMap.pipe(map((p) => Number(p.get('id')))), {
+    initialValue: Number(this.route.snapshot.paramMap.get('id') ?? 0),
+  });
 
   readonly bookQuery = injectQuery(() => ({
     queryKey: ['book', this.id()],
@@ -53,9 +52,7 @@ export default class BookDetailComponent {
     },
   }));
 
-  readonly latestProgress = computed(
-    () => this.bookQuery.data()?.progress?.[0] ?? null,
-  );
+  readonly latestProgress = computed(() => this.bookQuery.data()?.progress?.[0] ?? null);
   readonly percentage = computed(() => this.latestProgress()?.percentage ?? 0);
 
   readonly stars = [1, 2, 3, 4, 5];
@@ -80,11 +77,7 @@ export default class BookDetailComponent {
     }
   }
 
-  toBookCard(related: {
-    id: number;
-    title: string;
-    coverUrl: string | null;
-  }): Book {
+  toBookCard(related: { id: number; title: string; coverUrl: string | null }): Book {
     return {
       id: related.id,
       title: related.title,

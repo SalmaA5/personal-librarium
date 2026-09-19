@@ -1,0 +1,173 @@
+<div class="detail-page">
+  @if (detailQuery.isPending()) {
+    <div class="loading-msg">Cargando colección...</div>
+  } @else if (detailQuery.isError()) {
+    <div class="error-msg">No se pudo cargar la colección</div>
+  } @else {
+    @let col = detailQuery.data()!;
+
+    <!-- Header -->
+    <div class="header">
+      <button class="btn-back" type="button" (click)="goBack()">← Volver</button>
+      @if (!showEditForm()) {
+        <h1 class="col-title">{{ col.name }}</h1>
+        <div class="header-actions">
+          <button class="btn-icon" type="button" (click)="openEdit()">Editar</button>
+          <button
+            class="btn-icon danger"
+            type="button"
+            (click)="deleteCollection()"
+            [disabled]="deleteMutation.isPending()">
+            ×
+          </button>
+        </div>
+      }
+    </div>
+
+    @if (!showEditForm()) {
+      <div class="col-meta">
+        @if (col.description) {
+          <span class="col-description">{{ col.description }}</span>
+        }
+        <span class="badge">{{ col.typeName }}</span>
+        <span class="book-count">{{ localBooks().length }} libros</span>
+      </div>
+    }
+
+    <!-- Edit form -->
+    @if (showEditForm()) {
+      <form class="edit-form" [formGroup]="editForm" (ngSubmit)="submitEdit()">
+        <div class="form-row">
+          <div class="field">
+            <label class="label">Nombre <span class="req">*</span></label>
+            <input class="input" type="text" formControlName="name" />
+            @if (editForm.get('name')?.invalid && editForm.get('name')?.touched) {
+              <span class="error">El nombre es obligatorio</span>
+            }
+          </div>
+          <div class="field">
+            <label class="label">Tipo</label>
+            <p-select
+              [options]="typesQuery.data() ?? []"
+              optionLabel="name"
+              optionValue="id"
+              formControlName="typeId"
+              placeholder="Seleccionar tipo"
+              styleClass="p-select-full" />
+          </div>
+        </div>
+        <div class="field">
+          <label class="label">Descripción</label>
+          <input class="input" type="text" formControlName="description" />
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn-cancel" (click)="cancelEdit()">
+            Cancelar
+          </button>
+          <button type="submit" class="btn-save" [disabled]="updateMutation.isPending()">
+            {{ updateMutation.isPending() ? 'Guardando...' : 'Guardar' }}
+          </button>
+        </div>
+      </form>
+    }
+
+    <div class="divider"></div>
+
+    <!-- Book list -->
+    <div class="book-list">
+      @for (book of localBooks(); track book.bookId; let i = $index) {
+        <div
+          class="book-row"
+          [class.dragging]="draggingIndex() === i"
+          draggable="true"
+          (dragstart)="onDragStart(i)"
+          (dragover)="onDragOver($event, i)"
+          (drop)="onDrop()">
+          <span class="drag-handle">⠿</span>
+          @if (book.coverUrl) {
+            <img
+              class="book-cover"
+              [src]="getCoverUrl(book.coverUrl)"
+              [alt]="book.title" />
+          } @else {
+            <div class="book-cover cover-placeholder"></div>
+          }
+          <div class="book-info">
+            <span class="book-title">{{ book.title }}</span>
+            @if (book.authors.length > 0) {
+              <span class="book-author">{{ book.authors[0].name }}</span>
+            }
+          </div>
+          @if (progressLabel(book)) {
+            <span class="progress-badge {{ progressClass(book) }}">{{
+              progressLabel(book)
+            }}</span>
+          }
+          <button
+            class="btn-remove"
+            type="button"
+            (click)="removeBook(book.bookId)"
+            [disabled]="removeMutation.isPending()">
+            ×
+          </button>
+        </div>
+      }
+
+      @if (localBooks().length === 0) {
+        <p class="empty-books">Esta colección no tiene libros todavía.</p>
+      }
+    </div>
+
+    <!-- Add book -->
+    <div class="add-book-section">
+      <button class="btn-add-book" type="button" (click)="toggleAddBook()">
+        {{ showAddBook() ? '− Cancelar' : '+ Añadir libro a esta colección' }}
+      </button>
+
+      @if (showAddBook()) {
+        <div class="search-box">
+          <input
+            class="input"
+            type="text"
+            placeholder="Buscar libro..."
+            [value]="addBookSearch()"
+            (input)="setSearch($any($event.target).value)" />
+          @if (searchQuery.isFetching()) {
+            <span class="searching">Buscando...</span>
+          }
+          @if ((searchQuery.data()?.data ?? []).length > 0) {
+            <div class="search-results">
+              @for (book of searchQuery.data()!.data; track book.id) {
+                <button
+                  class="search-result"
+                  type="button"
+                  [disabled]="isBookInCollection(book.id) || addMutation.isPending()"
+                  (click)="addBook(book.id)">
+                  @if (book.coverUrl) {
+                    <img
+                      class="result-cover"
+                      [src]="getCoverUrl(book.coverUrl)"
+                      [alt]="book.title" />
+                  } @else {
+                    <div class="result-cover cover-placeholder"></div>
+                  }
+                  <div class="result-info">
+                    <span class="result-title">{{ book.title }}</span>
+                    @if (book.authors && book.authors.length > 0) {
+                      <span class="result-author">{{ book.authors[0].name }}</span>
+                    }
+                  </div>
+                  @if (isBookInCollection(book.id)) {
+                    <span class="already-in">Ya añadido</span>
+                  }
+                </button>
+              }
+            </div>
+          } @else if (debouncedSearch().trim().length > 1 && !searchQuery.isFetching()) {
+            <p class="no-results">Sin resultados</p>
+          }
+        </div>
+      }
+    </div>
+  }
+</div>

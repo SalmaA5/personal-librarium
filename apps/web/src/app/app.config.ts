@@ -10,6 +10,8 @@ import {
   provideAngularQuery,
   QueryClient,
 } from '@tanstack/angular-query-experimental';
+import { providePrimeNG } from 'primeng/config';
+import Aura from '@primeng/themes/aura';
 import { appRoutes } from './app.routes';
 import { initTheme } from './core/theme/theme.initializer';
 
@@ -21,5 +23,17 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(),
     provideAngularQuery(new QueryClient()),
     provideAppInitializer(initTheme),
+    providePrimeNG({
+      theme: {
+        preset: Aura,
+        options: {
+          darkModeSelector: 'none',
+          cssLayer: {
+            name: 'primeng',
+            order: 'primeng',
+          },
+        },
+      },
+    }),
   ],
 };

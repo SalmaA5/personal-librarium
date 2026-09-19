@@ -37,7 +37,7 @@ body {
 /* 2 — PrimeNG design-token overrides */
 :root {
   --p-primary-color: var(--color-accent);
-  --p-primary-contrast-color: var(--color-text-primary);
+  --p-primary-contrast-color: #ffffff;
   --p-surface-0: var(--color-bg-page);
   --p-surface-card: var(--color-bg-card);
   --p-text-color: var(--color-text-primary);
@@ -45,7 +45,18 @@ body {
   --p-content-border-color: var(--color-border);
   --p-highlight-bg: var(--color-accent-soft);
   --p-highlight-color: var(--color-accent);
+  --p-input-background: var(--color-bg-card);
+  --p-input-border-color: var(--color-border);
+  --p-input-color: var(--color-text-primary);
+  --p-overlay-select-background: var(--color-bg-card);
+  --p-overlay-select-border-color: var(--color-border);
+  --p-overlay-select-color: var(--color-text-primary);
 }
 
-/* 3 — Icon font */
+/* 3 — p-select full-width helper */
+.p-select-full {
+  width: 100%;
+}
+
+/* 4 — Icon font */
 @import 'primeicons/primeicons.css';

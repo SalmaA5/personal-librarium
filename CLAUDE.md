@@ -31,7 +31,7 @@ Personal digital library manager for books and manga. Stores metadata and readin
 ```
 apps/
   api/      NestJS 12 — REST API
-  web/      Angular 22 standalone — browser reader
+  web/      Angular 21 standalone — browser reader
   mobile/   Ionic 9 + Angular + Capacitor — mobile app
 libs/
   shared/types       @librarium/types      — shared TS interfaces
@@ -78,7 +78,7 @@ Env vars: `TURSO_URL`, `TURSO_AUTH_TOKEN` (see `.env.example`).
 
 ## PrimeNG (web only)
 
-- Version 22 con Aura preset desde `@primeuix/themes/aura` (NO usar `@primeng/themes`, está deprecado)
+- Version 21 con Aura preset desde `@primeng/themes/aura` (paquete `@primeng/themes` instalado por separado)
 - Configured in `apps/web/src/app/app.config.ts` con `providePrimeNG` + `provideAnimationsAsync`
 - `darkModeSelector: 'none'` — tema controlado al 100% por ThemeService vía CSS variables
 - PrimeNG tokens (`--p-primary-color`, etc.) cascade desde `--color-*` vars in `styles.scss`

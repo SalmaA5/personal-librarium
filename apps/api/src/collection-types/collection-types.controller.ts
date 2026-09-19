@@ -25,9 +25,7 @@ import { CreateCollectionTypeDto } from './dto/create-collection-type.dto';
 @ApiTags('collection-types')
 @Controller('collection-types')
 export class CollectionTypesController {
-  constructor(
-    private readonly collectionTypesService: CollectionTypesService,
-  ) {}
+  constructor(private readonly collectionTypesService: CollectionTypesService) {}
 
   @Get()
   @ApiOperation({ summary: 'List all collection types' })
@@ -47,10 +45,7 @@ export class CollectionTypesController {
   @ApiOperation({ summary: 'Update a collection type name' })
   @ApiOkResponse({ description: 'Collection type updated' })
   @ApiNotFoundResponse({ description: 'Collection type not found' })
-  update(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() dto: CreateCollectionTypeDto,
-  ) {
+  update(@Param('id', ParseIntPipe) id: number, @Body() dto: CreateCollectionTypeDto) {
     return this.collectionTypesService.update(id, dto);
   }
 

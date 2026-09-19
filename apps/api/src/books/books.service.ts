@@ -1,15 +1,5 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
-import {
-  and,
-  asc,
-  desc,
-  eq,
-  getTableColumns,
-  inArray,
-  like,
-  or,
-  sql,
-} from 'drizzle-orm';
+import { and, asc, desc, eq, getTableColumns, inArray, like, or, sql } from 'drizzle-orm';
 import { DRIZZLE } from '../db/database.module';
 import type { DrizzleClient } from '../db/index';
 import {
@@ -62,18 +52,15 @@ export class BooksService {
               .select({ id: bookAuthor.bookId })
               .from(bookAuthor)
               .innerJoin(author, eq(author.id, bookAuthor.authorId))
-              .where(like(author.name, `%${search}%`)),
-          ),
-        ),
+              .where(like(author.name, `%${search}%`))
+          )
+        )
       );
     }
 
-    if (status)
-      conditions.push(eq(book.status, status as 'unread' | 'reading' | 'read'));
+    if (status) conditions.push(eq(book.status, status as 'unread' | 'reading' | 'read'));
     if (format)
-      conditions.push(
-        eq(book.format, format as 'epub' | 'pdf' | 'html' | 'cbz'),
-      );
+      conditions.push(eq(book.format, format as 'epub' | 'pdf' | 'html' | 'cbz'));
 
     if (genreFilter) {
       conditions.push(
@@ -83,8 +70,8 @@ export class BooksService {
             .select({ id: bookGenre.bookId })
             .from(bookGenre)
             .innerJoin(genre, eq(genre.id, bookGenre.genreId))
-            .where(eq(genre.name, genreFilter)),
-        ),
+            .where(eq(genre.name, genreFilter))
+        )
       );
     }
 
@@ -96,8 +83,8 @@ export class BooksService {
             .select({ id: bookTag.bookId })
             .from(bookTag)
             .innerJoin(tag, eq(tag.id, bookTag.tagId))
-            .where(eq(tag.name, tagFilter)),
-        ),
+            .where(eq(tag.name, tagFilter))
+        )
       );
     }
 
@@ -108,12 +95,9 @@ export class BooksService {
           this.db
             .select({ id: bookCollection.bookId })
             .from(bookCollection)
-            .innerJoin(
-              collection,
-              eq(collection.id, bookCollection.collectionId),
-            )
-            .where(eq(collection.name, collectionFilter)),
-        ),
+            .innerJoin(collection, eq(collection.id, bookCollection.collectionId))
+            .where(eq(collection.name, collectionFilter))
+        )
       );
     }
 
@@ -131,9 +115,7 @@ export class BooksService {
       const lp = this.db
         .select({
           bookId: readingProgress.bookId,
-          lastReadAt: sql<string>`max(${readingProgress.lastReadAt})`.as(
-            'last_read_at',
-          ),
+          lastReadAt: sql<string>`max(${readingProgress.lastReadAt})`.as('last_read_at'),
         })
         .from(readingProgress)
         .groupBy(readingProgress.bookId)
@@ -219,56 +201,48 @@ export class BooksService {
   }
 
   async findOne(id: number) {
-    const [found] = await this.db
-      .select()
-      .from(book)
-      .where(eq(book.id, id))
-      .limit(1);
+    const [found] = await this.db.select().from(book).where(eq(book.id, id)).limit(1);
 
     if (!found) throw new NotFoundException(`Book ${id} not found`);
 
-    const [authors, genres, tags, collections, related, progress] =
-      await Promise.all([
-        this.db
-          .select({ id: author.id, name: author.name })
-          .from(bookAuthor)
-          .innerJoin(author, eq(author.id, bookAuthor.authorId))
-          .where(eq(bookAuthor.bookId, id)),
-        this.db
-          .select({ id: genre.id, name: genre.name })
-          .from(bookGenre)
-          .innerJoin(genre, eq(genre.id, bookGenre.genreId))
-          .where(eq(bookGenre.bookId, id)),
-        this.db
-          .select({ id: tag.id, name: tag.name })
-          .from(bookTag)
-          .innerJoin(tag, eq(tag.id, bookTag.tagId))
-          .where(eq(bookTag.bookId, id)),
-        this.db
-          .select({
-            id: collection.id,
-            name: collection.name,
-            typeId: collection.typeId,
-            order: bookCollection.order,
-          })
-          .from(bookCollection)
-          .innerJoin(collection, eq(collection.id, bookCollection.collectionId))
-          .where(eq(bookCollection.bookId, id)),
-        this.db
-          .select({
-            id: book.id,
-            title: book.title,
-            coverUrl: book.coverUrl,
-            relationType: relatedBook.relationType,
-          })
-          .from(relatedBook)
-          .innerJoin(book, eq(book.id, relatedBook.relatedBookId))
-          .where(eq(relatedBook.bookId, id)),
-        this.db
-          .select()
-          .from(readingProgress)
-          .where(eq(readingProgress.bookId, id)),
-      ]);
+    const [authors, genres, tags, collections, related, progress] = await Promise.all([
+      this.db
+        .select({ id: author.id, name: author.name })
+        .from(bookAuthor)
+        .innerJoin(author, eq(author.id, bookAuthor.authorId))
+        .where(eq(bookAuthor.bookId, id)),
+      this.db
+        .select({ id: genre.id, name: genre.name })
+        .from(bookGenre)
+        .innerJoin(genre, eq(genre.id, bookGenre.genreId))
+        .where(eq(bookGenre.bookId, id)),
+      this.db
+        .select({ id: tag.id, name: tag.name })
+        .from(bookTag)
+        .innerJoin(tag, eq(tag.id, bookTag.tagId))
+        .where(eq(bookTag.bookId, id)),
+      this.db
+        .select({
+          id: collection.id,
+          name: collection.name,
+          typeId: collection.typeId,
+          order: bookCollection.order,
+        })
+        .from(bookCollection)
+        .innerJoin(collection, eq(collection.id, bookCollection.collectionId))
+        .where(eq(bookCollection.bookId, id)),
+      this.db
+        .select({
+          id: book.id,
+          title: book.title,
+          coverUrl: book.coverUrl,
+          relationType: relatedBook.relationType,
+        })
+        .from(relatedBook)
+        .innerJoin(book, eq(book.id, relatedBook.relatedBookId))
+        .where(eq(relatedBook.bookId, id)),
+      this.db.select().from(readingProgress).where(eq(readingProgress.bookId, id)),
+    ]);
 
     return { ...found, authors, genres, tags, collections, related, progress };
   }
@@ -320,12 +294,7 @@ export class BooksService {
 
     if (!existing) throw new NotFoundException(`Book ${id} not found`);
 
-    const {
-      authors: authorNames,
-      genres: genreNames,
-      tags: tagNames,
-      ...bookData
-    } = dto;
+    const { authors: authorNames, genres: genreNames, tags: tagNames, ...bookData } = dto;
 
     return this.db.transaction(async (tx) => {
       const [updated] = await tx
@@ -337,8 +306,7 @@ export class BooksService {
         .where(eq(book.id, id))
         .returning();
 
-      if (authorNames !== undefined)
-        await this.syncAuthors(tx, id, authorNames);
+      if (authorNames !== undefined) await this.syncAuthors(tx, id, authorNames);
       if (genreNames !== undefined) await this.syncGenres(tx, id, genreNames);
       if (tagNames !== undefined) await this.syncTags(tx, id, tagNames);
 
@@ -375,7 +343,7 @@ export class BooksService {
   private async syncAuthors(
     tx: Parameters<Parameters<DrizzleClient['transaction']>[0]>[0],
     bookId: number,
-    names: string[],
+    names: string[]
   ) {
     await tx.delete(bookAuthor).where(eq(bookAuthor.bookId, bookId));
     for (const name of names) {
@@ -387,12 +355,7 @@ export class BooksService {
       const authorId =
         existing.length > 0
           ? existing[0].id
-          : (
-              await tx
-                .insert(author)
-                .values({ name })
-                .returning({ id: author.id })
-            )[0].id;
+          : (await tx.insert(author).values({ name }).returning({ id: author.id }))[0].id;
       await tx.insert(bookAuthor).values({ bookId, authorId });
     }
   }
@@ -400,7 +363,7 @@ export class BooksService {
   private async syncGenres(
     tx: Parameters<Parameters<DrizzleClient['transaction']>[0]>[0],
     bookId: number,
-    names: string[],
+    names: string[]
   ) {
     await tx.delete(bookGenre).where(eq(bookGenre.bookId, bookId));
     for (const name of names) {
@@ -412,12 +375,7 @@ export class BooksService {
       const genreId =
         existing.length > 0
           ? existing[0].id
-          : (
-              await tx
-                .insert(genre)
-                .values({ name })
-                .returning({ id: genre.id })
-            )[0].id;
+          : (await tx.insert(genre).values({ name }).returning({ id: genre.id }))[0].id;
       await tx.insert(bookGenre).values({ bookId, genreId });
     }
   }
@@ -425,7 +383,7 @@ export class BooksService {
   private async syncTags(
     tx: Parameters<Parameters<DrizzleClient['transaction']>[0]>[0],
     bookId: number,
-    names: string[],
+    names: string[]
   ) {
     await tx.delete(bookTag).where(eq(bookTag.bookId, bookId));
     for (const name of names) {
@@ -437,8 +395,7 @@ export class BooksService {
       const tagId =
         existing.length > 0
           ? existing[0].id
-          : (await tx.insert(tag).values({ name }).returning({ id: tag.id }))[0]
-              .id;
+          : (await tx.insert(tag).values({ name }).returning({ id: tag.id }))[0].id;
       await tx.insert(bookTag).values({ bookId, tagId });
     }
   }

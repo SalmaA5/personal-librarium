@@ -193,8 +193,7 @@ export class CollectionsService {
       .where(eq(collection.id, collectionId))
       .limit(1);
 
-    if (!col)
-      throw new NotFoundException(`Collection ${collectionId} not found`);
+    if (!col) throw new NotFoundException(`Collection ${collectionId} not found`);
 
     const [b] = await this.db
       .select({ id: book.id })
@@ -210,8 +209,8 @@ export class CollectionsService {
       .where(
         and(
           eq(bookCollection.collectionId, collectionId),
-          eq(bookCollection.bookId, dto.bookId),
-        ),
+          eq(bookCollection.bookId, dto.bookId)
+        )
       )
       .limit(1);
 
@@ -222,8 +221,8 @@ export class CollectionsService {
         .where(
           and(
             eq(bookCollection.collectionId, collectionId),
-            eq(bookCollection.bookId, dto.bookId),
-          ),
+            eq(bookCollection.bookId, dto.bookId)
+          )
         );
     } else {
       await this.db
@@ -239,23 +238,21 @@ export class CollectionsService {
       .where(
         and(
           eq(bookCollection.collectionId, collectionId),
-          eq(bookCollection.bookId, bookId),
-        ),
+          eq(bookCollection.bookId, bookId)
+        )
       )
       .limit(1);
 
     if (!existing)
-      throw new NotFoundException(
-        `Book ${bookId} not in collection ${collectionId}`,
-      );
+      throw new NotFoundException(`Book ${bookId} not in collection ${collectionId}`);
 
     await this.db
       .delete(bookCollection)
       .where(
         and(
           eq(bookCollection.collectionId, collectionId),
-          eq(bookCollection.bookId, bookId),
-        ),
+          eq(bookCollection.bookId, bookId)
+        )
       );
   }
 
@@ -266,8 +263,7 @@ export class CollectionsService {
       .where(eq(collection.id, collectionId))
       .limit(1);
 
-    if (!col)
-      throw new NotFoundException(`Collection ${collectionId} not found`);
+    if (!col) throw new NotFoundException(`Collection ${collectionId} not found`);
 
     await this.db.transaction(async (tx) => {
       for (const { bookId, order } of dto.books) {
@@ -277,8 +273,8 @@ export class CollectionsService {
           .where(
             and(
               eq(bookCollection.collectionId, collectionId),
-              eq(bookCollection.bookId, bookId),
-            ),
+              eq(bookCollection.bookId, bookId)
+            )
           );
       }
     });

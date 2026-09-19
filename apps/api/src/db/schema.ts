@@ -1,11 +1,5 @@
 import { sql } from 'drizzle-orm';
-import {
-  integer,
-  real,
-  sqliteTable,
-  text,
-  primaryKey,
-} from 'drizzle-orm/sqlite-core';
+import { integer, real, sqliteTable, text, primaryKey } from 'drizzle-orm/sqlite-core';
 
 export const author = sqliteTable('author', {
   id: integer('id').primaryKey({ autoIncrement: true }),
@@ -91,7 +85,7 @@ export const bookAuthor = sqliteTable(
       .notNull()
       .references(() => author.id, { onDelete: 'cascade' }),
   },
-  (t) => [primaryKey({ columns: [t.bookId, t.authorId] })],
+  (t) => [primaryKey({ columns: [t.bookId, t.authorId] })]
 );
 
 export const bookGenre = sqliteTable(
@@ -104,7 +98,7 @@ export const bookGenre = sqliteTable(
       .notNull()
       .references(() => genre.id, { onDelete: 'cascade' }),
   },
-  (t) => [primaryKey({ columns: [t.bookId, t.genreId] })],
+  (t) => [primaryKey({ columns: [t.bookId, t.genreId] })]
 );
 
 export const bookTag = sqliteTable(
@@ -117,7 +111,7 @@ export const bookTag = sqliteTable(
       .notNull()
       .references(() => tag.id, { onDelete: 'cascade' }),
   },
-  (t) => [primaryKey({ columns: [t.bookId, t.tagId] })],
+  (t) => [primaryKey({ columns: [t.bookId, t.tagId] })]
 );
 
 export const bookCollection = sqliteTable(
@@ -131,7 +125,7 @@ export const bookCollection = sqliteTable(
       .references(() => collection.id, { onDelete: 'cascade' }),
     order: integer('order'),
   },
-  (t) => [primaryKey({ columns: [t.bookId, t.collectionId] })],
+  (t) => [primaryKey({ columns: [t.bookId, t.collectionId] })]
 );
 
 export const appConfig = sqliteTable('app_config', {
@@ -155,5 +149,5 @@ export const relatedBook = sqliteTable(
       enum: ['sequel', 'prequel', 'spinoff', 'companion'],
     }).notNull(),
   },
-  (t) => [primaryKey({ columns: [t.bookId, t.relatedBookId] })],
+  (t) => [primaryKey({ columns: [t.bookId, t.relatedBookId] })]
 );

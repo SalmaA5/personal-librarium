@@ -60,10 +60,7 @@ export class CollectionsController {
   @ApiOperation({ summary: 'Update a collection' })
   @ApiOkResponse({ description: 'Collection updated' })
   @ApiNotFoundResponse({ description: 'Collection not found' })
-  update(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() dto: UpdateCollectionDto,
-  ) {
+  update(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateCollectionDto) {
     return this.collectionsService.update(id, dto);
   }
 
@@ -93,7 +90,7 @@ export class CollectionsController {
   @ApiNotFoundResponse({ description: 'Link not found' })
   removeBook(
     @Param('id', ParseIntPipe) id: number,
-    @Param('bookId', ParseIntPipe) bookId: number,
+    @Param('bookId', ParseIntPipe) bookId: number
   ) {
     return this.collectionsService.removeBook(id, bookId);
   }
@@ -102,10 +99,7 @@ export class CollectionsController {
   @ApiOperation({ summary: 'Reorder books within a collection' })
   @ApiOkResponse({ description: 'Order updated' })
   @ApiNotFoundResponse({ description: 'Collection not found' })
-  reorderBooks(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() dto: ReorderBooksDto,
-  ) {
+  reorderBooks(@Param('id', ParseIntPipe) id: number, @Body() dto: ReorderBooksDto) {
     return this.collectionsService.reorderBooks(id, dto);
   }
 }

@@ -1,9 +1,4 @@
-import {
-  ConflictException,
-  Inject,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { ConflictException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { asc, eq } from 'drizzle-orm';
 import { DRIZZLE } from '../db/database.module';
 import type { DrizzleClient } from '../db/index';
@@ -15,10 +10,7 @@ export class CollectionTypesService {
   constructor(@Inject(DRIZZLE) private readonly db: DrizzleClient) {}
 
   findAll() {
-    return this.db
-      .select()
-      .from(collectionType)
-      .orderBy(asc(collectionType.name));
+    return this.db.select().from(collectionType).orderBy(asc(collectionType.name));
   }
 
   async create(dto: CreateCollectionTypeDto) {
@@ -36,8 +28,7 @@ export class CollectionTypesService {
       .where(eq(collectionType.id, id))
       .limit(1);
 
-    if (!existing)
-      throw new NotFoundException(`Collection type ${id} not found`);
+    if (!existing) throw new NotFoundException(`Collection type ${id} not found`);
 
     const [updated] = await this.db
       .update(collectionType)
@@ -55,8 +46,7 @@ export class CollectionTypesService {
       .where(eq(collectionType.id, id))
       .limit(1);
 
-    if (!existing)
-      throw new NotFoundException(`Collection type ${id} not found`);
+    if (!existing) throw new NotFoundException(`Collection type ${id} not found`);
 
     const [inUse] = await this.db
       .select({ id: collection.id })
@@ -66,7 +56,7 @@ export class CollectionTypesService {
 
     if (inUse)
       throw new ConflictException(
-        `Collection type ${id} is in use and cannot be deleted`,
+        `Collection type ${id} is in use and cannot be deleted`
       );
 
     await this.db.delete(collectionType).where(eq(collectionType.id, id));

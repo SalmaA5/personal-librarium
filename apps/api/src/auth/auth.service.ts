@@ -19,12 +19,12 @@ export class AuthService implements OnModuleInit {
 
   constructor(
     @Inject(DRIZZLE) private readonly db: DrizzleClient,
-    private readonly config: ConfigService,
+    private readonly config: ConfigService
   ) {
     this.oauth2Client = new google.auth.OAuth2(
       config.getOrThrow<string>('GOOGLE_CLIENT_ID'),
       config.getOrThrow<string>('GOOGLE_CLIENT_SECRET'),
-      `${config.get<string>('API_BASE_URL', 'http://localhost:3000')}/api/auth/google/callback`,
+      `${config.get<string>('API_BASE_URL', 'http://localhost:3000')}/api/auth/google/callback`
     );
 
     // Persist any rotated tokens automatically
@@ -51,7 +51,7 @@ export class AuthService implements OnModuleInit {
       this.logger.log('Google credentials loaded from env');
     } else {
       this.logger.warn(
-        'No Google credentials found — visit /api/auth/google to authorize',
+        'No Google credentials found — visit /api/auth/google to authorize'
       );
     }
   }

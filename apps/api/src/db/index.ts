@@ -7,7 +7,7 @@ import * as schema from './schema';
 // Retrying after a short delay lets the second attempt hit a warm database.
 async function fetchWithColdStartRetry(
   url: Parameters<typeof fetch>[0],
-  init?: Parameters<typeof fetch>[1],
+  init?: Parameters<typeof fetch>[1]
 ): Promise<Response> {
   const TIMEOUT_MS = 30_000;
   const MAX_RETRIES = 2;

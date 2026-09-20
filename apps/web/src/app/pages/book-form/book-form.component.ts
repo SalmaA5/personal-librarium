@@ -8,8 +8,9 @@ import { FORM_IMPORTS, PRIMENG_IMPORTS } from '@libs/ui-shared';
 import {
   injectMutation,
   injectQuery,
-  injectQueryClient,
+  QueryClient,
 } from '@tanstack/angular-query-experimental';
+import { MessageService } from 'primeng/api';
 import { firstValueFrom } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -23,10 +24,11 @@ import { map } from 'rxjs/operators';
 export default class BookFormComponent {
   private readonly fb = inject(FormBuilder);
   private readonly booksService = inject(BooksService);
+  private readonly messageService = inject(MessageService);
   private readonly metadataService = inject(MetadataService);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
-  private readonly queryClient = injectQueryClient();
+  private readonly queryClient = inject(QueryClient);
 
   readonly id = toSignal(this.route.paramMap.pipe(map((p) => Number(p.get('id') ?? 0))), {
     initialValue: Number(this.route.snapshot.paramMap.get('id') ?? 0),
@@ -94,11 +96,20 @@ export default class BookFormComponent {
             queryKey: ['progress', this.id()],
           });
         }
+        this.messageService.add({ severity: 'success', summary: 'Cambios guardados' });
+      } else {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Libro añadido',
+          detail: 'El libro se ha añadido a tu biblioteca',
+        });
       }
       this.router.navigate(['/books', book.id]);
     },
     onError: (err: unknown) => {
-      this.saveError.set(err instanceof Error ? err.message : 'Error al guardar');
+      const detail = err instanceof Error ? err.message : 'Error al guardar';
+      this.saveError.set(detail);
+      this.messageService.add({ severity: 'error', summary: 'Error', detail });
     },
   }));
 

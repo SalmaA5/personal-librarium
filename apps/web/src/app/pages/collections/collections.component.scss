@@ -244,42 +244,12 @@
   pointer-events: none;
 }
 
-.skeleton-mosaic {
+.mosaic-skeleton {
   aspect-ratio: 4 / 3;
-  background: linear-gradient(
-    90deg,
-    var(--color-border) 25%,
-    var(--color-accent-soft) 50%,
-    var(--color-border) 75%
-  );
-  background-size: 200% 100%;
-  animation: shimmer 1.5s infinite;
+  overflow: hidden;
 }
 
-.skeleton-line {
-  height: 0.8rem;
-  border-radius: 4px;
-  background: var(--color-border);
-
-  &.wide {
-    width: 80%;
-  }
-
-  &.short {
-    width: 40%;
-  }
-}
-
-@keyframes shimmer {
-  0% {
-    background-position: 200% 0;
-  }
-  100% {
-    background-position: -200% 0;
-  }
-}
-
-// Empty
+// Empty / error
 .empty-state {
   display: flex;
   flex-direction: column;
@@ -287,6 +257,11 @@
   gap: 1rem;
   padding: 4rem 0;
   color: var(--color-text-secondary);
+
+  i {
+    font-size: 2.5rem;
+    opacity: 0.4;
+  }
 
   p {
     margin: 0;

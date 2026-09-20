@@ -9,6 +9,7 @@ import { provideRouter } from '@angular/router';
 import { ThemeService } from '@libs/utils';
 import Aura from '@primeng/themes/aura';
 import { provideTanStackQuery, QueryClient } from '@tanstack/angular-query-experimental';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { providePrimeNG } from 'primeng/config';
 import { appRoutes } from './app.routes';
 
@@ -36,5 +37,7 @@ export const appConfig: ApplicationConfig = {
         },
       },
     }),
+    ConfirmationService,
+    MessageService,
   ],
 };

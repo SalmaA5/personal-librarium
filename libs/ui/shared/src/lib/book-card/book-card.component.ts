@@ -1,11 +1,11 @@
 import { Component, computed, input } from '@angular/core';
 import { Book } from '@libs/types';
-import { ROUTER_IMPORTS } from '../shared_imports';
+import { PRIMENG_IMPORTS, ROUTER_IMPORTS } from '../shared_imports';
 
 @Component({
   selector: 'lib-book-card',
   standalone: true,
-  imports: [ROUTER_IMPORTS],
+  imports: [ROUTER_IMPORTS, PRIMENG_IMPORTS],
   templateUrl: './book-card.component.html',
   styleUrl: './book-card.component.scss',
 })

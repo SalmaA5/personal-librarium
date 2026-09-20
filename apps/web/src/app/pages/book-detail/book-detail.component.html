@@ -1,13 +1,13 @@
 <div class="book-detail">
   @if (bookQuery.isPending()) {
     <div class="skeleton-layout">
-      <div class="skeleton-cover"></div>
+      <p-skeleton height="300px" borderRadius="8px" />
       <div class="skeleton-info">
-        <div class="skeleton-line wide"></div>
-        <div class="skeleton-line medium"></div>
-        <div class="skeleton-line short"></div>
-        <div class="skeleton-line wide"></div>
-        <div class="skeleton-line medium"></div>
+        <p-skeleton width="70%" height="1.5rem" class="mt-2" />
+        <p-skeleton width="40%" height="1rem" class="mt-1" />
+        <p-skeleton width="60%" height="1rem" class="mt-1" />
+        <p-skeleton width="70%" height="1rem" class="mt-2" />
+        <p-skeleton width="40%" height="0.8rem" class="mt-1" />
       </div>
     </div>
   } @else if (bookQuery.isError()) {
@@ -31,8 +31,7 @@
             <img
               class="cover"
               [src]="coverUrl(bookQuery.data()!.coverUrl)"
-              [alt]="bookQuery.data()!.title"
-            />
+              [alt]="bookQuery.data()!.title" />
           } @else {
             <div class="cover-placeholder">
               <i class="pi pi-book"></i>
@@ -42,40 +41,27 @@
 
         @if (percentage() > 0) {
           <div class="progress-section">
-            <div class="progress-bar-wrap">
-              <div
-                class="progress-bar-fill"
-                [style.width.%]="percentage()"
-              ></div>
-            </div>
+            <p-progressBar [value]="percentage()" [showValue]="false" />
             <span class="progress-label">{{ percentage() }}% leído</span>
             @if (latestProgress()?.lastReadAt) {
               <span class="last-read"
-                >Última lectura:
-                {{ latestProgress()!.lastReadAt | slice: 0 : 10 }}</span
+                >Última lectura: {{ latestProgress()!.lastReadAt | slice: 0 : 10 }}</span
               >
             }
           </div>
         }
 
         <div class="action-buttons">
-          <a
-            [routerLink]="['/books', id(), 'read']"
-            class="btn-action btn-read"
-          >
+          <a [routerLink]="['/books', id(), 'read']" class="btn-action btn-read">
             <i class="pi pi-play"></i> Leer
           </a>
-          <a
-            [routerLink]="['/books', id(), 'edit']"
-            class="btn-action btn-edit"
-          >
+          <a [routerLink]="['/books', id(), 'edit']" class="btn-action btn-edit">
             <i class="pi pi-pencil"></i> Editar
           </a>
           <button
             class="btn-action btn-delete"
             (click)="confirmDelete()"
-            [disabled]="deleteMutation.isPending()"
-          >
+            [disabled]="deleteMutation.isPending()">
             <i class="pi pi-trash"></i> Eliminar
           </button>
         </div>
@@ -138,15 +124,11 @@
             }
             @if (bookQuery.data()!.totalChapters) {
               <span class="meta-label">Capítulos</span>
-              <span class="meta-value">{{
-                bookQuery.data()!.totalChapters
-              }}</span>
+              <span class="meta-value">{{ bookQuery.data()!.totalChapters }}</span>
             }
             @if (bookQuery.data()!.totalVolumes) {
               <span class="meta-label">Volúmenes</span>
-              <span class="meta-value">{{
-                bookQuery.data()!.totalVolumes
-              }}</span>
+              <span class="meta-value">{{ bookQuery.data()!.totalVolumes }}</span>
             }
             <span class="meta-label">Estado</span>
             <span class="meta-value">
@@ -163,19 +145,7 @@
 
         <div class="section-divider">
           <h3 class="section-label">Mi valoración</h3>
-          <div class="stars" (mouseleave)="hoverRating.set(0)">
-            @for (star of stars; track star) {
-              <i
-                [class]="
-                  (hoverRating() || bookQuery.data()!.rating || 0) >= star
-                    ? 'pi pi-star-fill'
-                    : 'pi pi-star'
-                "
-                (mouseenter)="hoverRating.set(star)"
-                (click)="setRating(star)"
-              ></i>
-            }
-          </div>
+          <p-rating [(ngModel)]="currentRating" (ngModelChange)="setRating($event)" />
         </div>
 
         <div class="section-divider">
@@ -185,8 +155,7 @@
             placeholder="Escribe tu reseña..."
             [value]="bookQuery.data()!.review ?? ''"
             (blur)="saveReview($event)"
-            rows="4"
-          ></textarea>
+            rows="4"></textarea>
         </div>
       </section>
     </div>

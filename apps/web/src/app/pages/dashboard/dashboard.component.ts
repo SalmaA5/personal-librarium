@@ -1,14 +1,14 @@
 import { Component, computed, inject } from '@angular/core';
 import { BooksService, StatsService } from '@libs/api-client';
 import { Book } from '@libs/types';
-import { ROUTER_IMPORTS } from '@libs/ui-shared';
+import { PRIMENG_IMPORTS, ROUTER_IMPORTS } from '@libs/ui-shared';
 import { injectQuery } from '@tanstack/angular-query-experimental';
 import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [ROUTER_IMPORTS],
+  imports: [ROUTER_IMPORTS, PRIMENG_IMPORTS],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
 })

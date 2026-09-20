@@ -14,13 +14,15 @@ async function bootstrap() {
 
   app.use(
     (
-      _req: unknown,
+      req: { path: string },
       res: { setHeader: (k: string, v: string) => void },
-      next: () => void,
+      next: () => void
     ) => {
-      res.setHeader('Content-Type', 'application/json; charset=utf-8');
+      if (!req.path.includes('/docs')) {
+        res.setHeader('Content-Type', 'application/json; charset=utf-8');
+      }
       next();
-    },
+    }
   );
 
   app.enableCors({ origin: 'http://localhost:4200' });
@@ -36,9 +38,7 @@ async function bootstrap() {
 
   const port = process.env.PORT || 3000;
   await app.listen(port);
-  Logger.log(
-    `Application is running on: http://localhost:${port}/${globalPrefix}`,
-  );
+  Logger.log(`Application is running on: http://localhost:${port}/${globalPrefix}`);
   Logger.log(`Swagger docs: http://localhost:${port}/${globalPrefix}/docs`);
 }
 

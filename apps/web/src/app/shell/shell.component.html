@@ -25,5 +25,23 @@
     <main class="content">
       <router-outlet />
     </main>
+    <p-confirmDialog />
+    <p-toast position="bottom-right" />
   </div>
+</div>
+
+<!-- TEST: quitar después -->
+<div
+  style="
+    position: fixed;
+    bottom: 1rem;
+    left: 1rem;
+    display: flex;
+    gap: 8px;
+    z-index: 9999;
+  ">
+  <button (click)="themeService.setTheme('teal', 'dark')">Teal Dark</button>
+  <button (click)="themeService.setTheme('teal', 'light')">Teal Light</button>
+  <button (click)="themeService.setTheme('mauve', 'dark')">Mauve Dark</button>
+  <button (click)="themeService.setTheme('mauve', 'light')">Mauve Light</button>
 </div>

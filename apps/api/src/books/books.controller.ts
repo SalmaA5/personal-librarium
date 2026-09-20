@@ -36,6 +36,14 @@ export class BooksController {
     return this.booksService.findAll(filters);
   }
 
+  @Get('drive/:driveFileId')
+  @ApiOperation({ summary: 'Get book by Google Drive file ID' })
+  @ApiOkResponse({ description: 'Book found' })
+  @ApiNotFoundResponse({ description: 'Book not found' })
+  findByDriveFileId(@Param('driveFileId') driveFileId: string) {
+    return this.booksService.findByDriveFileId(driveFileId);
+  }
+
   @Get(':id')
   @ApiOperation({ summary: 'Get a single book with all relations' })
   @ApiOkResponse({ description: 'Book detail' })

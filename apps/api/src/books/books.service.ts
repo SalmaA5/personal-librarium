@@ -326,6 +326,18 @@ export class BooksService {
     await this.db.delete(book).where(eq(book.id, id));
   }
 
+  async findByDriveFileId(driveFileId: string) {
+    const [found] = await this.db
+      .select({ id: book.id })
+      .from(book)
+      .where(eq(book.driveFileId, driveFileId))
+      .limit(1);
+
+    if (!found)
+      throw new NotFoundException(`Book with driveFileId ${driveFileId} not found`);
+    return this.findOne(found.id);
+  }
+
   async getCover(id: number) {
     const [found] = await this.db
       .select({ coverUrl: book.coverUrl })

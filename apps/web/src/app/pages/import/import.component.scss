@@ -1,0 +1,461 @@
+.import-page {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+// ── Header ──────────────────────────────────────────────────────────────────
+.page-header {
+  margin-bottom: 0.25rem;
+}
+
+.page-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+// ── Search ───────────────────────────────────────────────────────────────────
+.search-row {
+  display: flex;
+}
+
+.search-wrap {
+  position: relative;
+  flex: 1;
+  max-width: 520px;
+
+  .search-icon {
+    position: absolute;
+    left: 0.875rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--color-text-secondary);
+    font-size: 0.875rem;
+    pointer-events: none;
+  }
+}
+
+.search-input {
+  width: 100%;
+  padding: 0.625rem 2.5rem 0.625rem 2.5rem;
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  color: var(--color-text-primary);
+  font-size: 0.9rem;
+  font-family: inherit;
+  box-sizing: border-box;
+  transition: border-color 0.15s;
+
+  &::placeholder {
+    color: var(--color-text-secondary);
+  }
+
+  &:focus {
+    outline: none;
+    border-color: var(--color-accent);
+  }
+}
+
+.search-clear {
+  position: absolute;
+  right: 0.625rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  padding: 0.25rem;
+  line-height: 1;
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+
+  &:hover {
+    color: var(--color-text-primary);
+  }
+}
+
+// ── Explorer panel ───────────────────────────────────────────────────────────
+.explorer-panel {
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+// ── Breadcrumb ────────────────────────────────────────────────────────────────
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--color-border);
+  flex-wrap: wrap;
+}
+
+.breadcrumb-item {
+  background: none;
+  border: none;
+  padding: 0.15rem 0.25rem;
+  font-size: 0.85rem;
+  font-family: inherit;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  border-radius: 4px;
+  transition: color 0.15s;
+
+  &:hover {
+    color: var(--color-accent);
+  }
+
+  &.breadcrumb-item--active {
+    color: var(--color-text-primary);
+    font-weight: 500;
+    cursor: default;
+
+    &:hover {
+      color: var(--color-text-primary);
+    }
+  }
+}
+
+.breadcrumb-sep {
+  color: var(--color-text-secondary);
+  font-size: 0.9rem;
+  opacity: 0.5;
+  line-height: 1;
+}
+
+// ── Explorer items ────────────────────────────────────────────────────────────
+.explorer-item {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.65rem 1rem;
+  border-bottom: 1px solid var(--color-border);
+  transition: background 0.1s;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &.explorer-item--folder {
+    cursor: pointer;
+
+    &:hover {
+      background: var(--color-accent-soft);
+    }
+  }
+
+  &.explorer-item--file {
+    .item-name {
+      flex: 1;
+    }
+  }
+}
+
+.item-icon {
+  font-size: 1rem;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.item-name {
+  font-size: 0.875rem;
+  color: var(--color-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+}
+
+.item-arrow {
+  color: var(--color-text-secondary);
+  font-size: 0.75rem;
+  flex-shrink: 0;
+  opacity: 0.5;
+}
+
+.item-actions {
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+// ── Import button ─────────────────────────────────────────────────────────────
+.btn-import {
+  padding: 0.3rem 0.7rem;
+  background: var(--color-accent);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.775rem;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: opacity 0.15s;
+
+  &:hover {
+    opacity: 0.85;
+  }
+}
+
+// ── Already imported badge ────────────────────────────────────────────────────
+.badge-imported {
+  display: inline-block;
+  padding: 0.25rem 0.625rem;
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+// ── Skeleton loading ──────────────────────────────────────────────────────────
+.skeleton-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.skeleton-ml {
+  margin-left: auto;
+}
+
+.skeleton-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--color-border);
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+// ── Search results header ─────────────────────────────────────────────────────
+.search-results-header {
+  padding: 0.65rem 1rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.results-label {
+  font-size: 0.825rem;
+  color: var(--color-text-secondary);
+}
+
+// ── Empty states ──────────────────────────────────────────────────────────────
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 3rem 1rem;
+  color: var(--color-text-secondary);
+  text-align: center;
+
+  i {
+    font-size: 2rem;
+    opacity: 0.4;
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.9rem;
+  }
+}
+
+.folder-empty {
+  padding: 1rem;
+  font-size: 0.825rem;
+  color: var(--color-text-secondary);
+  text-align: center;
+  font-style: italic;
+}
+
+// ── Dialog overlay ────────────────────────────────────────────────────────────
+.dialog-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+  backdrop-filter: blur(2px);
+}
+
+.dialog {
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  padding: 1.5rem;
+  width: 100%;
+  max-width: 440px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.dialog-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.dialog-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.dialog-close {
+  background: none;
+  border: none;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  padding: 0.25rem;
+  font-size: 0.875rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  border-radius: 4px;
+  transition: color 0.15s;
+
+  &:hover {
+    color: var(--color-text-primary);
+  }
+}
+
+.dialog-filename {
+  font-size: 0.825rem;
+  color: var(--color-text-secondary);
+  margin: 0;
+  word-break: break-all;
+}
+
+// ── Progress steps ────────────────────────────────────────────────────────────
+.steps {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.step {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+.step-icon {
+  font-size: 0.9rem;
+  flex-shrink: 0;
+  width: 1rem;
+  text-align: center;
+
+  &.step-icon--done {
+    color: #22c55e;
+  }
+
+  &.step-icon--active {
+    color: var(--color-accent);
+  }
+
+  &.step-icon--pending {
+    color: var(--color-text-secondary);
+    opacity: 0.4;
+  }
+}
+
+.step-label {
+  font-size: 0.85rem;
+  color: var(--color-text-primary);
+
+  .step--pending & {
+    color: var(--color-text-secondary);
+    opacity: 0.6;
+  }
+}
+
+// ── Import result ─────────────────────────────────────────────────────────────
+.import-result {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 0 0.25rem;
+  text-align: center;
+
+  p {
+    margin: 0;
+    font-size: 0.925rem;
+    color: var(--color-text-primary);
+  }
+}
+
+.result-icon {
+  font-size: 2rem;
+
+  &.result-icon--success {
+    color: #22c55e;
+  }
+
+  &.result-icon--error {
+    color: #ef4444;
+  }
+}
+
+.error-msg {
+  color: var(--color-text-secondary) !important;
+  font-size: 0.825rem !important;
+}
+
+.result-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+// ── Buttons ───────────────────────────────────────────────────────────────────
+.btn-primary {
+  padding: 0.45rem 1rem;
+  background: var(--color-accent);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  transition: opacity 0.15s;
+
+  &:hover {
+    opacity: 0.88;
+  }
+}
+
+.btn-secondary {
+  padding: 0.45rem 1rem;
+  background: transparent;
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-family: inherit;
+  cursor: pointer;
+  transition:
+    border-color 0.15s,
+    color 0.15s;
+
+  &:hover {
+    border-color: var(--color-text-secondary);
+    color: var(--color-text-primary);
+  }
+}

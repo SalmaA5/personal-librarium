@@ -7,6 +7,7 @@ import {
   CollectionTypesService,
 } from '@libs/api-client';
 import { FORM_IMPORTS, PRIMENG_IMPORTS } from '@libs/ui-shared';
+import { MessageService } from 'primeng/api';
 import {
   injectMutation,
   injectQuery,
@@ -25,11 +26,12 @@ export default class CollectionsComponent {
   private readonly collectionsService = inject(CollectionsService);
   private readonly collectionTypesService = inject(CollectionTypesService);
   private readonly booksService = inject(BooksService);
+  private readonly messageService = inject(MessageService);
   private readonly router = inject(Router);
   private readonly fb = inject(FormBuilder);
   private readonly queryClient = inject(QueryClient);
 
-  readonly filterTypeId = signal<number | null>(null);
+  readonly filterTypeId = signal<number>(0);
   readonly showCreateForm = signal(false);
 
   readonly typesQuery = injectQuery(() => ({
@@ -42,7 +44,7 @@ export default class CollectionsComponent {
     queryFn: () =>
       firstValueFrom(
         this.collectionsService.getAll(
-          this.filterTypeId() !== null ? { typeId: this.filterTypeId()! } : undefined
+          this.filterTypeId() !== 0 ? { typeId: this.filterTypeId() } : undefined
         )
       ),
   }));
@@ -60,10 +62,18 @@ export default class CollectionsComponent {
       this.queryClient.invalidateQueries({ queryKey: ['collections'] });
       this.createForm.reset({ name: '', description: '', typeId: 0 });
       this.showCreateForm.set(false);
+      this.messageService.add({ severity: 'success', summary: 'Colección creada' });
+    },
+    onError: (err: unknown) => {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: err instanceof Error ? err.message : 'Error al crear la colección',
+      });
     },
   }));
 
-  setFilter(typeId: number | null): void {
+  setFilter(typeId: number): void {
     this.filterTypeId.set(typeId);
   }
 

@@ -3,7 +3,7 @@
   <section class="stats-row">
     @if (statsQuery.isPending()) {
       @for (i of [1, 2, 3, 4]; track i) {
-        <div class="card skeleton"></div>
+        <p-skeleton height="8rem" borderRadius="0.8rem" />
       }
     } @else if (statsQuery.isError()) {
       <div class="error-banner">
@@ -13,9 +13,7 @@
     } @else {
       <div class="card stat-card">
         <i class="pi pi-database stat-icon"></i>
-        <span class="stat-number">{{
-          statsQuery.data()?.totalBooks ?? 0
-        }}</span>
+        <span class="stat-number">{{ statsQuery.data()?.totalBooks ?? 0 }}</span>
         <span class="stat-label">Total de libros</span>
       </div>
       <div class="card stat-card">
@@ -25,16 +23,12 @@
       </div>
       <div class="card stat-card">
         <i class="pi pi-spinner stat-icon"></i>
-        <span class="stat-number">{{
-          statsQuery.data()?.readingBooks ?? 0
-        }}</span>
+        <span class="stat-number">{{ statsQuery.data()?.readingBooks ?? 0 }}</span>
         <span class="stat-label">En progreso</span>
       </div>
       <div class="card stat-card">
         <i class="pi pi-clock stat-icon"></i>
-        <span class="stat-number">{{
-          statsQuery.data()?.unreadBooks ?? 0
-        }}</span>
+        <span class="stat-number">{{ statsQuery.data()?.unreadBooks ?? 0 }}</span>
         <span class="stat-label">Pendientes</span>
       </div>
     }
@@ -47,7 +41,7 @@
     @if (readingBooksQuery.isPending()) {
       <div class="reading-row">
         @for (i of [1, 2, 3]; track i) {
-          <div class="card reading-card skeleton"></div>
+          <p-skeleton height="200px" borderRadius="0.8rem" />
         }
       </div>
     } @else if (readingBooksQuery.isError()) {
@@ -72,21 +66,14 @@
             <img class="cover" [src]="coverUrl(book)" [alt]="book.title" />
             <div class="reading-info">
               <span class="book-title">{{ book.title }}</span>
-              <span class="book-author">{{
-                book.authors?.[0]?.name ?? ''
-              }}</span>
-              <div class="progress-bar-wrap">
-                <div
-                  class="progress-bar-fill"
-                  [style.width.%]="readingProgresses()[i]?.percentage ?? 0"
-                ></div>
-              </div>
+              <span class="book-author">{{ book.authors?.[0]?.name ?? '' }}</span>
+              <p-progressBar
+                [value]="readingProgresses()[i]?.percentage ?? 0"
+                [showValue]="false" />
               <span class="progress-label"
                 >{{ readingProgresses()[i]?.percentage ?? 0 }}%</span
               >
-              <a [routerLink]="['/books', book.id, 'read']" class="btn-primary"
-                >Leer</a
-              >
+              <a [routerLink]="['/books', book.id, 'read']" class="btn-primary">Leer</a>
             </div>
           </div>
         }
@@ -101,7 +88,13 @@
     @if (recentBooksQuery.isPending()) {
       <div class="recent-grid">
         @for (i of [1, 2, 3, 4, 5, 6, 7, 8]; track i) {
-          <div class="card recent-card skeleton"></div>
+          <div class="card recent-card">
+            <p-skeleton height="200px" borderRadius="8px" />
+            <div class="recent-info">
+              <p-skeleton width="70%" height="1rem" />
+              <p-skeleton width="40%" height="0.8rem" />
+            </div>
+          </div>
         }
       </div>
     } @else if (recentBooksQuery.isError()) {
@@ -122,9 +115,7 @@
             <img class="cover" [src]="coverUrl(book)" [alt]="book.title" />
             <div class="recent-info">
               <span class="book-title">{{ book.title }}</span>
-              <span class="book-author">{{
-                book.authors?.[0]?.name ?? ''
-              }}</span>
+              <span class="book-author">{{ book.authors?.[0]?.name ?? '' }}</span>
             </div>
           </a>
         }

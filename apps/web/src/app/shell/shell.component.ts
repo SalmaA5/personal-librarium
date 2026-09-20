@@ -1,7 +1,8 @@
 import { Component, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
-import { ROUTER_IMPORTS } from '@libs/ui-shared';
+import { PRIMENG_IMPORTS, ROUTER_IMPORTS } from '@libs/ui-shared';
+import { ThemeService } from '@libs/utils';
 import { filter, map } from 'rxjs/operators';
 
 const NAV_ITEMS = [
@@ -31,12 +32,13 @@ function titleFromUrl(url: string): string {
 @Component({
   selector: 'app-shell',
   standalone: true,
-  imports: [RouterOutlet, ROUTER_IMPORTS],
+  imports: [RouterOutlet, ROUTER_IMPORTS, PRIMENG_IMPORTS],
   templateUrl: './shell.component.html',
   styleUrl: './shell.component.scss',
 })
 export class ShellComponent {
   private readonly router = inject(Router);
+  readonly themeService = inject(ThemeService);
 
   readonly navItems = NAV_ITEMS;
 

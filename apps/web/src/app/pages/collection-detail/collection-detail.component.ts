@@ -4,22 +4,23 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   BooksService,
-  CollectionTypesService,
   CollectionsService,
+  CollectionTypesService,
 } from '@libs/api-client';
 import { CollectionBook } from '@libs/types';
-import { FORM_IMPORTS, PRIMENG_IMPORTS } from '@libs/ui-shared';
+import { FORM_IMPORTS, PRIMENG_IMPORTS, ROUTER_IMPORTS } from '@libs/ui-shared';
 import {
   injectMutation,
   injectQuery,
-  injectQueryClient,
+  QueryClient,
 } from '@tanstack/angular-query-experimental';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { firstValueFrom, map } from 'rxjs';
 
 @Component({
   selector: 'app-collection-detail',
   standalone: true,
-  imports: [FORM_IMPORTS, PRIMENG_IMPORTS],
+  imports: [FORM_IMPORTS, PRIMENG_IMPORTS, ROUTER_IMPORTS],
   templateUrl: './collection-detail.component.html',
   styleUrl: './collection-detail.component.scss',
 })
@@ -29,8 +30,10 @@ export default class CollectionDetailComponent {
   private readonly booksService = inject(BooksService);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
+  private readonly confirmationService = inject(ConfirmationService);
+  private readonly messageService = inject(MessageService);
   private readonly fb = inject(FormBuilder);
-  private readonly queryClient = injectQueryClient();
+  private readonly queryClient = inject(QueryClient);
 
   readonly id = toSignal(this.route.paramMap.pipe(map((p) => Number(p.get('id') ?? 0))), {
     initialValue: Number(this.route.snapshot.paramMap.get('id') ?? 0),
@@ -81,6 +84,14 @@ export default class CollectionDetailComponent {
       });
       this.queryClient.invalidateQueries({ queryKey: ['collections'] });
       this.showEditForm.set(false);
+      this.messageService.add({ severity: 'success', summary: 'Colección actualizada' });
+    },
+    onError: (err: unknown) => {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: err instanceof Error ? err.message : 'Error al actualizar',
+      });
     },
   }));
 
@@ -123,7 +134,15 @@ export default class CollectionDetailComponent {
     mutationFn: () => firstValueFrom(this.collectionsService.remove(this.id())),
     onSuccess: () => {
       this.queryClient.invalidateQueries({ queryKey: ['collections'] });
+      this.messageService.add({ severity: 'info', summary: 'Colección eliminada' });
       this.router.navigate(['/collections']);
+    },
+    onError: (err: unknown) => {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: err instanceof Error ? err.message : 'Error al eliminar',
+      });
     },
   }));
 
@@ -180,15 +199,27 @@ export default class CollectionDetailComponent {
   }
 
   deleteCollection(): void {
-    if (confirm('¿Eliminar esta colección? Esta acción no se puede deshacer.')) {
-      this.deleteMutation.mutate();
-    }
+    this.confirmationService.confirm({
+      message: '¿Eliminar esta colección? Esta acción no se puede deshacer.',
+      header: 'Confirmar eliminación',
+      icon: 'pi pi-trash',
+      acceptLabel: 'Eliminar',
+      rejectLabel: 'Cancelar',
+      acceptButtonStyleClass: 'p-button-danger',
+      accept: () => this.deleteMutation.mutate(),
+    });
   }
 
   removeBook(bookId: number): void {
-    if (confirm('¿Quitar este libro de la colección?')) {
-      this.removeMutation.mutate(bookId);
-    }
+    this.confirmationService.confirm({
+      message: '¿Quitar este libro de la colección?',
+      header: 'Confirmar',
+      icon: 'pi pi-trash',
+      acceptLabel: 'Quitar',
+      rejectLabel: 'Cancelar',
+      acceptButtonStyleClass: 'p-button-danger',
+      accept: () => this.removeMutation.mutate(bookId),
+    });
   }
 
   onDragStart(index: number): void {

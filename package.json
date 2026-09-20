@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
+    "dev": "concurrently -n api,web -c cyan,magenta \"pnpm nx serve api\" \"pnpm nx serve web\"",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:studio": "drizzle-kit studio",
@@ -35,6 +36,7 @@
     "@swc/helpers": "0.5.18",
     "@types/express": "^5.0.6",
     "@types/node": "^24.0.0",
+    "concurrently": "^10.0.5",
     "dotenv": "^17.4.2",
     "drizzle-kit": "^0.31.10",
     "esbuild": "^0.28.2",

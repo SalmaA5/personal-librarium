@@ -12,25 +12,6 @@
   overflow: hidden;
 }
 
-// ── Skeleton ──
-@keyframes shimmer {
-  0% {
-    opacity: 0.4;
-  }
-  50% {
-    opacity: 0.8;
-  }
-  100% {
-    opacity: 0.4;
-  }
-}
-
-.skeleton {
-  background: var(--color-accent-soft);
-  animation: shimmer 1.4s ease-in-out infinite;
-  min-height: 120px;
-}
-
 // ── 1. Stats row ──
 .stats-row {
   display: grid;

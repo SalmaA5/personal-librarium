@@ -8,31 +8,37 @@
 
     <!-- Header -->
     <div class="header">
-      <button class="btn-back" type="button" (click)="goBack()">← Volver</button>
+      <a routerLink="/collections" class="btn-back">
+        <i class="pi pi-arrow-left"></i>
+      </a>
       @if (!showEditForm()) {
-        <h1 class="col-title">{{ col.name }}</h1>
-        <div class="header-actions">
-          <button class="btn-icon" type="button" (click)="openEdit()">Editar</button>
-          <button
-            class="btn-icon danger"
-            type="button"
-            (click)="deleteCollection()"
-            [disabled]="deleteMutation.isPending()">
-            ×
-          </button>
+        <div class="header-main">
+          <div class="header-top">
+            <h1 class="col-title">{{ col.name }}</h1>
+            <div class="header-actions">
+              <button class="btn-action btn-edit" type="button" (click)="openEdit()">
+                <i class="pi pi-pencil"></i> Editar
+              </button>
+              <button
+                class="btn-action btn-delete"
+                type="button"
+                (click)="deleteCollection()"
+                [disabled]="deleteMutation.isPending()">
+                <i class="pi pi-trash"></i> Eliminar
+              </button>
+            </div>
+          </div>
+          <div class="col-meta">
+            <span class="badge">{{ col.typeName }}</span>
+            <p-divider layout="vertical" />
+            <span class="book-count">{{ localBooks().length }} libros</span>
+          </div>
+          @if (col.description) {
+            <p class="col-description">{{ col.description }}</p>
+          }
         </div>
       }
     </div>
-
-    @if (!showEditForm()) {
-      <div class="col-meta">
-        @if (col.description) {
-          <span class="col-description">{{ col.description }}</span>
-        }
-        <span class="badge">{{ col.typeName }}</span>
-        <span class="book-count">{{ localBooks().length }} libros</span>
-      </div>
-    }
 
     <!-- Edit form -->
     @if (showEditForm()) {
@@ -53,7 +59,7 @@
               optionValue="id"
               formControlName="typeId"
               placeholder="Seleccionar tipo"
-              styleClass="p-select-full" />
+              class="p-select-full" />
           </div>
         </div>
         <div class="field">

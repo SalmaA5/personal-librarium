@@ -1,0 +1,281 @@
+<div class="settings-page">
+  <header class="page-header">
+    <h1 class="page-title">Ajustes</h1>
+  </header>
+
+  <!-- ── Apariencia ─────────────────────────────────────────────────────── -->
+  <section class="settings-section">
+    <h2 class="section-title">🎨 Apariencia</h2>
+
+    <div class="setting-row">
+      <span class="setting-label">Tema</span>
+      <p-selectbutton
+        [options]="paletteOptions"
+        [ngModel]="themeService.currentTheme().palette"
+        (ngModelChange)="selectPalette($event)"
+        optionLabel="label"
+        optionValue="value"
+        styleClass="theme-selector">
+        <ng-template pTemplate="item" let-opt>
+          <span class="palette-dot" [ngClass]="'palette-dot--' + opt.value"></span>
+          {{ opt.label }}
+        </ng-template>
+      </p-selectbutton>
+    </div>
+
+    <div class="setting-row">
+      <span class="setting-label">Modo</span>
+      <p-selectbutton
+        [options]="modeOptions"
+        [ngModel]="uiMode()"
+        (ngModelChange)="selectMode($event)"
+        optionLabel="label"
+        optionValue="value" />
+    </div>
+  </section>
+
+  <!-- ── Géneros ────────────────────────────────────────────────────────── -->
+  <section class="settings-section">
+    <h2 class="section-title">📚 Géneros</h2>
+    <div class="chips-row">
+      @if (genresQuery.isLoading()) {
+        @for (n of skeletonChips; track n) {
+          <p-skeleton width="80px" height="32px" borderRadius="20px" />
+        }
+      } @else {
+        @for (item of genresQuery.data() ?? []; track item.id) {
+          @if (editingGenreId() === item.id) {
+            <span class="chip chip--editing">
+              <input
+                class="chip-input"
+                type="text"
+                [value]="editingGenreName()"
+                (input)="editingGenreName.set($any($event.target).value)"
+                (keydown.enter)="confirmEditGenre(item.id)"
+                (keydown.escape)="cancelEditGenre()"
+                autofocus />
+              <button
+                class="chip-action chip-action--confirm"
+                (click)="confirmEditGenre(item.id)"
+                title="Confirmar">
+                <i class="pi pi-check"></i>
+              </button>
+              <button
+                class="chip-action chip-action--cancel"
+                (click)="cancelEditGenre()"
+                title="Cancelar">
+                <i class="pi pi-times"></i>
+              </button>
+            </span>
+          } @else {
+            <span class="chip">
+              <span class="chip-name">{{ item.name }}</span>
+              <span class="chip-actions">
+                <button class="chip-action" (click)="startEditGenre(item)" title="Editar">
+                  <i class="pi pi-pencil"></i>
+                </button>
+                <button
+                  class="chip-action chip-action--del"
+                  (click)="confirmDeleteGenre(item)"
+                  title="Eliminar">
+                  <i class="pi pi-times"></i>
+                </button>
+              </span>
+            </span>
+          }
+        }
+        @if (showAddGenre()) {
+          <span class="chip chip--editing">
+            <input
+              class="chip-input"
+              type="text"
+              placeholder="Nuevo género..."
+              [value]="addGenreName()"
+              (input)="addGenreName.set($any($event.target).value)"
+              (keydown.enter)="confirmAddGenre()"
+              (keydown.escape)="showAddGenre.set(false)"
+              autofocus />
+            <button
+              class="chip-action chip-action--confirm"
+              (click)="confirmAddGenre()"
+              title="Confirmar">
+              <i class="pi pi-check"></i>
+            </button>
+            <button
+              class="chip-action chip-action--cancel"
+              (click)="showAddGenre.set(false)"
+              title="Cancelar">
+              <i class="pi pi-times"></i>
+            </button>
+          </span>
+        } @else {
+          <button class="btn-add" (click)="showAddGenre.set(true)">
+            + Añadir género
+          </button>
+        }
+      }
+    </div>
+  </section>
+
+  <!-- ── Tags ───────────────────────────────────────────────────────────── -->
+  <section class="settings-section">
+    <h2 class="section-title">🏷 Tags</h2>
+    <div class="chips-row">
+      @if (tagsQuery.isLoading()) {
+        @for (n of skeletonChips; track n) {
+          <p-skeleton width="70px" height="32px" borderRadius="20px" />
+        }
+      } @else {
+        @for (item of tagsQuery.data() ?? []; track item.id) {
+          @if (editingTagId() === item.id) {
+            <span class="chip chip--editing">
+              <input
+                class="chip-input"
+                type="text"
+                [value]="editingTagName()"
+                (input)="editingTagName.set($any($event.target).value)"
+                (keydown.enter)="confirmEditTag(item.id)"
+                (keydown.escape)="cancelEditTag()"
+                autofocus />
+              <button
+                class="chip-action chip-action--confirm"
+                (click)="confirmEditTag(item.id)"
+                title="Confirmar">
+                <i class="pi pi-check"></i>
+              </button>
+              <button
+                class="chip-action chip-action--cancel"
+                (click)="cancelEditTag()"
+                title="Cancelar">
+                <i class="pi pi-times"></i>
+              </button>
+            </span>
+          } @else {
+            <span class="chip">
+              <span class="chip-name">{{ item.name }}</span>
+              <span class="chip-actions">
+                <button class="chip-action" (click)="startEditTag(item)" title="Editar">
+                  <i class="pi pi-pencil"></i>
+                </button>
+                <button
+                  class="chip-action chip-action--del"
+                  (click)="confirmDeleteTag(item)"
+                  title="Eliminar">
+                  <i class="pi pi-times"></i>
+                </button>
+              </span>
+            </span>
+          }
+        }
+        @if (showAddTag()) {
+          <span class="chip chip--editing">
+            <input
+              class="chip-input"
+              type="text"
+              placeholder="Nuevo tag..."
+              [value]="addTagName()"
+              (input)="addTagName.set($any($event.target).value)"
+              (keydown.enter)="confirmAddTag()"
+              (keydown.escape)="showAddTag.set(false)"
+              autofocus />
+            <button
+              class="chip-action chip-action--confirm"
+              (click)="confirmAddTag()"
+              title="Confirmar">
+              <i class="pi pi-check"></i>
+            </button>
+            <button
+              class="chip-action chip-action--cancel"
+              (click)="showAddTag.set(false)"
+              title="Cancelar">
+              <i class="pi pi-times"></i>
+            </button>
+          </span>
+        } @else {
+          <button class="btn-add" (click)="showAddTag.set(true)">+ Añadir tag</button>
+        }
+      }
+    </div>
+  </section>
+
+  <!-- ── Tipos de colección ─────────────────────────────────────────────── -->
+  <section class="settings-section">
+    <h2 class="section-title">📂 Tipos de colección</h2>
+    <div class="chips-row">
+      @if (collectionTypesQuery.isLoading()) {
+        @for (n of skeletonChips; track n) {
+          <p-skeleton width="75px" height="32px" borderRadius="20px" />
+        }
+      } @else {
+        @for (item of collectionTypesQuery.data() ?? []; track item.id) {
+          @if (editingCtId() === item.id) {
+            <span class="chip chip--editing">
+              <input
+                class="chip-input"
+                type="text"
+                [value]="editingCtName()"
+                (input)="editingCtName.set($any($event.target).value)"
+                (keydown.enter)="confirmEditCt(item.id)"
+                (keydown.escape)="cancelEditCt()"
+                autofocus />
+              <button
+                class="chip-action chip-action--confirm"
+                (click)="confirmEditCt(item.id)"
+                title="Confirmar">
+                <i class="pi pi-check"></i>
+              </button>
+              <button
+                class="chip-action chip-action--cancel"
+                (click)="cancelEditCt()"
+                title="Cancelar">
+                <i class="pi pi-times"></i>
+              </button>
+            </span>
+          } @else {
+            <span class="chip">
+              <span class="chip-name">{{ item.name }}</span>
+              <span class="chip-actions">
+                <button class="chip-action" (click)="startEditCt(item)" title="Editar">
+                  <i class="pi pi-pencil"></i>
+                </button>
+                <button
+                  class="chip-action chip-action--del"
+                  (click)="confirmDeleteCt(item)"
+                  title="Eliminar">
+                  <i class="pi pi-times"></i>
+                </button>
+              </span>
+            </span>
+          }
+        }
+        @if (showAddCt()) {
+          <span class="chip chip--editing">
+            <input
+              class="chip-input"
+              type="text"
+              placeholder="Nuevo tipo..."
+              [value]="addCtName()"
+              (input)="addCtName.set($any($event.target).value)"
+              (keydown.enter)="confirmAddCt()"
+              (keydown.escape)="showAddCt.set(false)"
+              autofocus />
+            <button
+              class="chip-action chip-action--confirm"
+              (click)="confirmAddCt()"
+              title="Confirmar">
+              <i class="pi pi-check"></i>
+            </button>
+            <button
+              class="chip-action chip-action--cancel"
+              (click)="showAddCt.set(false)"
+              title="Cancelar">
+              <i class="pi pi-times"></i>
+            </button>
+          </span>
+        } @else {
+          <button class="btn-add" (click)="showAddCt.set(true)">+ Añadir tipo</button>
+        }
+      }
+    </div>
+  </section>
+</div>

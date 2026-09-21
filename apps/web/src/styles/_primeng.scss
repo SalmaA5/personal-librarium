@@ -208,3 +208,36 @@
 .p-dialog {
   border: 1px solid var(--color-border) !important;
 }
+
+/* 9 — SelectButton: selected state — accent bg + white text for contrast in all modes */
+.p-selectbutton .p-button.p-highlight,
+.p-selectbutton .p-button[aria-checked='true'],
+.p-selectbutton .p-button[aria-pressed='true'] {
+  background: var(--color-accent) !important;
+  color: #fff !important;
+  border-color: var(--color-accent) !important;
+
+  &:hover {
+    opacity: 0.88;
+  }
+}
+
+.p-togglebutton {
+  background: var(--color-accent-soft) !important;
+  border-color: var(--color-accent-soft) !important;
+  color: var(--color-accent) !important;
+}
+
+.p-togglebutton-checked .p-togglebutton-content {
+  background: var(--color-accent) !important;
+  color: #fff !important;
+  // color: #fff !important;
+  border-color: var(--color-accent-soft) !important;
+  // background: var(--color-accent) !important;
+  // color: var(--color-accent-soft) !important;
+  // border-color: var(--color-accent) !important;
+
+  &:hover {
+    opacity: 0.88;
+  }
+}

@@ -61,3 +61,50 @@
 
 - ¿El mensaje de notificación del `curl` al terminar el import debe ser diferente al de finalización de tarea general?
 - ¿El dialog de progreso debería mostrarse en un `p-dialog` de PrimeNG o está bien el overlay CSS custom?
+
+---
+
+## 2026-09-20 — Página de Ajustes
+
+### Qué se hizo
+
+#### 1. API: CRUD completo para géneros, tags y autores
+
+- **`apps/api/src/metadata/dto/create-metadata-item.dto.ts`** (nuevo): DTO con `name: string` validado con `@IsString` + `@MinLength(1)`.
+- **`apps/api/src/metadata/metadata.service.ts`**: añadidos métodos `createGenre`, `updateGenre`, `deleteGenre`, `createTag`, `updateTag`, `deleteTag`, `createAuthor`, `updateAuthor`, `deleteAuthor`.
+  - Los deletes hacen check de uso (`bookGenre` / `bookTag` / `bookAuthor`) y lanzan `ConflictException` (409) si hay libros asociados.
+- **`apps/api/src/metadata/metadata.controller.ts`**: añadidos `POST/PATCH/DELETE` para géneros, tags y autores con decoradores Swagger completos.
+
+#### 2. API Client: nuevos métodos en MetadataService
+
+- **`libs/shared/api-client/.../services/metadata.service.ts`**: `createGenre`, `updateGenre`, `deleteGenre`, `createTag`, `updateTag`, `deleteTag`, `createAuthor`, `updateAuthor`, `deleteAuthor`.
+
+#### 3. Página de Ajustes (`apps/web/src/app/pages/settings/`)
+
+**Sección Apariencia:**
+
+- Selector de paleta (Teal / Mauve) con dot circular del color acento de cada tema.
+- Selector de modo (Oscuro / Claro / Sistema). "Sistema" llama a `ThemeService.followSystem()`.
+- El botón activo se resalta con `border: 2px solid var(--color-accent)`.
+- `uiMode` es un signal local `'dark' | 'light' | 'system'` para trackear el modo de la UI sin depender del localStorage (que solo guarda dark/light, no system).
+
+**Secciones Géneros / Tags / Tipos de colección (mismo patrón):**
+
+- TanStack Query (`injectQuery`) para carga, `injectMutation` para create/update/delete.
+- Chip en modo vista: nombre + botón ✏ (editar inline) + botón × (eliminar con confirm).
+- Chip en modo edición: `<input>` con `Enter` para confirmar, `Escape` para cancelar.
+- Botón `+ Añadir` abre un chip de edición al final.
+- Delete con `ConfirmationService` (PrimeNG) — usa el `<p-confirmDialog />` del shell.
+- Error 409 → toast `warn` "No se puede eliminar: tiene libros/colecciones asociados".
+- Tras cada mutación, `queryClient.invalidateQueries` para refrescar datos.
+
+### Decisiones tomadas
+
+- **`uiMode` signal local vs. detectar "system" desde localStorage**: ThemeService no expone si está en modo sistema (guarda 'dark'/'light' en localStorage). El modo "Sistema" no se recupera en un recarga de página. Esto es aceptable como primera iteración.
+- **Chips custom vs. PrimeNG `<p-chip>`**: Custom para tener control total sobre el inline editing.
+- **`autofocus` en inputs inline**: Funciona al crear el elemento dinámicamente en navegadores modernos; no garantizado en todos pero suficiente para esta UX.
+
+### Preguntas para revisión humana
+
+- ¿El modo "Sistema" debería persistirse en localStorage (con una clave extra) para restaurarlo al recargar?
+- ¿Se quiere añadir la sección de Autores en la UI de ajustes también?

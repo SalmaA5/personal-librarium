@@ -1,0 +1,223 @@
+<div class="import-page">
+  <!-- Header -->
+  <header class="page-header">
+    <h1 class="page-title">Importar desde Google Drive</h1>
+  </header>
+
+  <!-- Search bar -->
+  <div class="search-row">
+    <div class="search-wrap">
+      <i class="pi pi-search search-icon"></i>
+      <input
+        class="search-input"
+        type="text"
+        placeholder="Buscar en Drive..."
+        [value]="searchInput()"
+        (input)="onSearchChange($event)" />
+      @if (searchInput()) {
+        <button class="search-clear" (click)="clearSearch()" aria-label="Limpiar">
+          <i class="pi pi-times"></i>
+        </button>
+      }
+    </div>
+  </div>
+
+  <!-- Explorer panel -->
+  <div class="explorer-panel">
+    @if (!isSearchMode()) {
+      <!-- Breadcrumb -->
+      <nav class="breadcrumb" aria-label="Navegación Drive">
+        @for (item of breadcrumb(); track item.id; let last = $last) {
+          @if (!last) {
+            <button class="breadcrumb-item" (click)="navigateTo(item)">
+              {{ item.name }}
+            </button>
+            <span class="breadcrumb-sep">›</span>
+          } @else {
+            <span class="breadcrumb-item breadcrumb-item--active">{{ item.name }}</span>
+          }
+        }
+      </nav>
+
+      <!-- Folder list -->
+      @if (foldersQuery.isLoading()) {
+        <div class="skeleton-list">
+          @for (n of skeletonRows; track n) {
+            <div class="skeleton-item">
+              <p-skeleton width="18px" height="18px" borderRadius="4px" />
+              <p-skeleton width="55%" height="14px" borderRadius="4px" />
+            </div>
+          }
+        </div>
+      } @else if (foldersQuery.isError()) {
+        <div class="empty-state">
+          <i class="pi pi-exclamation-triangle"></i>
+          <p>Error al cargar las carpetas de Drive</p>
+        </div>
+      } @else if (!foldersQuery.data()?.length && !currentFolderId()) {
+        <div class="empty-state">
+          <i class="pi pi-folder-open"></i>
+          <p>No hay carpetas en Mi Drive</p>
+        </div>
+      } @else {
+        @for (folder of foldersQuery.data(); track folder.id) {
+          <div class="explorer-item explorer-item--folder" (click)="openFolder(folder)">
+            <span class="item-icon">📁</span>
+            <span class="item-name">{{ folder.name }}</span>
+            <i class="pi pi-chevron-right item-arrow"></i>
+          </div>
+        }
+      }
+
+      <!-- File list — only when inside a folder -->
+      @if (currentFolderId()) {
+        @if (filesQuery.isLoading()) {
+          <div class="skeleton-list">
+            @for (n of skeletonRows; track n) {
+              <div class="skeleton-item">
+                <p-skeleton width="18px" height="18px" borderRadius="4px" />
+                <p-skeleton width="65%" height="14px" borderRadius="4px" />
+                <span class="skeleton-ml"
+                  ><p-skeleton width="80px" height="28px" borderRadius="6px"
+                /></span>
+              </div>
+            }
+          </div>
+        } @else if (!filesQuery.data()?.length) {
+          <p class="folder-empty">Esta carpeta no contiene ficheros compatibles</p>
+        } @else {
+          @for (file of filesQuery.data(); track file.id) {
+            <div class="explorer-item explorer-item--file">
+              <span class="item-icon">{{ getFormatIcon(file) }}</span>
+              <span class="item-name">{{ file.name }}</span>
+              <div class="item-actions">
+                @if (isAlreadyImported(file.id)) {
+                  <span class="badge-imported">Ya importado</span>
+                } @else {
+                  <button class="btn-import" (click)="startImport(file)">
+                    + Importar
+                  </button>
+                }
+              </div>
+            </div>
+          }
+        }
+      }
+    } @else {
+      <!-- Search results -->
+      <div class="search-results-header">
+        @if (searchQuery.isLoading()) {
+          <span class="results-label">Buscando...</span>
+        } @else {
+          <span class="results-label">
+            {{ searchQuery.data()?.length ?? 0 }} resultado(s) para
+            <strong>"{{ debouncedSearch() }}"</strong>
+          </span>
+        }
+      </div>
+
+      @if (searchQuery.isLoading()) {
+        <div class="skeleton-list">
+          @for (n of skeletonRows; track n) {
+            <div class="skeleton-item">
+              <p-skeleton width="18px" height="18px" borderRadius="4px" />
+              <p-skeleton width="65%" height="14px" borderRadius="4px" />
+              <span class="skeleton-ml"
+                ><p-skeleton width="80px" height="28px" borderRadius="6px"
+              /></span>
+            </div>
+          }
+        </div>
+      } @else if (searchQuery.isError()) {
+        <div class="empty-state">
+          <i class="pi pi-exclamation-triangle"></i>
+          <p>Error al buscar en Drive</p>
+        </div>
+      } @else if (!searchQuery.data()?.length) {
+        <div class="empty-state">
+          <i class="pi pi-search"></i>
+          <p>No se encontraron ficheros</p>
+        </div>
+      } @else {
+        @for (file of searchQuery.data()!; track file.id) {
+          <div class="explorer-item explorer-item--file">
+            <span class="item-icon">{{ getFormatIcon(file) }}</span>
+            <span class="item-name">{{ file.name }}</span>
+            <div class="item-actions">
+              @if (isAlreadyImported(file.id)) {
+                <span class="badge-imported">Ya importado</span>
+              } @else {
+                <button class="btn-import" (click)="startImport(file)">+ Importar</button>
+              }
+            </div>
+          </div>
+        }
+      }
+    }
+  </div>
+</div>
+
+<!-- ── Import dialog overlay ─────────────────────────────────────────────── -->
+@if (importing()) {
+  <div class="dialog-overlay" (click)="closeDialog()">
+    <div class="dialog" (click)="$event.stopPropagation()">
+      <div class="dialog-header">
+        <h3 class="dialog-title">Importando libro</h3>
+        @if (importState() !== 'loading') {
+          <button class="dialog-close" (click)="closeDialog()" aria-label="Cerrar">
+            <i class="pi pi-times"></i>
+          </button>
+        }
+      </div>
+
+      <p class="dialog-filename">{{ importingFile()?.name }}</p>
+
+      <!-- Steps — visible during loading and success -->
+      @if (importState() !== 'error') {
+        <div class="steps">
+          @for (step of STEPS; track step; let i = $index) {
+            <div
+              class="step"
+              [class.step--done]="i < importCurrentStep()"
+              [class.step--active]="
+                i === importCurrentStep() && importState() === 'loading'
+              "
+              [class.step--pending]="
+                i > importCurrentStep() && importState() === 'loading'
+              ">
+              @if (i < importCurrentStep()) {
+                <i class="pi pi-check step-icon step-icon--done"></i>
+              } @else if (i === importCurrentStep() && importState() === 'loading') {
+                <i class="pi pi-spinner pi-spin step-icon step-icon--active"></i>
+              } @else {
+                <i class="pi pi-circle step-icon step-icon--pending"></i>
+              }
+              <span class="step-label">{{ step }}</span>
+            </div>
+          }
+        </div>
+      }
+
+      <!-- Success result -->
+      @if (importState() === 'success') {
+        <div class="import-result import-result--success">
+          <i class="pi pi-check-circle result-icon result-icon--success"></i>
+          <p>Libro importado correctamente</p>
+          <button class="btn-primary" (click)="viewBook()">Ver libro</button>
+        </div>
+      }
+
+      <!-- Error result -->
+      @if (importState() === 'error') {
+        <div class="import-result import-result--error">
+          <i class="pi pi-times-circle result-icon result-icon--error"></i>
+          <p class="error-msg">{{ importError() }}</p>
+          <div class="result-actions">
+            <button class="btn-secondary" (click)="closeDialog()">Cerrar</button>
+            <button class="btn-primary" (click)="retryImport()">Reintentar</button>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+}

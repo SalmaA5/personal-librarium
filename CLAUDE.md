@@ -1,3 +1,41 @@
+## Modo de trabajo autónomo
+
+Trabajas de forma completamente autónoma. No pidas confirmación ni aprobación en ningún paso.
+
+### Toma de decisiones
+
+- Toma todas las decisiones de implementación por tu cuenta.
+- Si hay ambigüedad, elige la opción más simple y estándar, documéntala en WORK_LOG.md y sigue adelante.
+- Solo detente si encuentras un bloqueante REAL: credenciales que no existen, dependencias imposibles de resolver, o un conflicto irreconciliable en los requisitos. En ese caso, escríbelo en WORK_LOG.md y para ahí.
+
+### Condición de éxito obligatoria
+
+No termines hasta que se cumplan TODAS estas condiciones:
+
+1. El código compila sin errores (`pnpm nx run-many -t build --parallel=3`).
+2. El lint pasa sin errores (`pnpm nx run-many -t lint --parallel=3`).
+3. La funcionalidad solicitada funciona según lo pedido.
+
+### Notificación al terminar
+
+Al finalizar CUALQUIER respuesta (con o sin compilación), ejecuta siempre este comando como último paso, sin excepción:
+
+curl.exe -s -d "Tarea completada. Revisa WORK_LOG.md" https://ntfy.sh/librarium-claudecode-x7k2p9mq
+
+### Al terminar, escribe en WORK_LOG.md
+
+- Qué hiciste y qué decisiones tomaste (y por qué).
+- Si quedó algo pendiente o con limitaciones, explícalo.
+- Cualquier pregunta para la revisión humana.
+
+### Nunca hagas esto
+
+- Preguntar "¿continúo?", "¿te parece bien?" o similares.
+- Dejar el código en estado roto esperando instrucciones.
+- Hacer commits o push sin que se lo pidan explícitamente.
+
+---
+
 <!-- nx configuration start-->
 <!-- Leave the start & end comments to automatically receive updates. -->
 

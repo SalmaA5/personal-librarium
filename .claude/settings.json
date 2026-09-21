@@ -12,7 +12,7 @@
   },
   "sandbox": {
     "network": {
-      "allowedDomains": ["www.google-analytics.com"]
+      "allowedDomains": ["ntfy.sh"]
     }
   }
 }

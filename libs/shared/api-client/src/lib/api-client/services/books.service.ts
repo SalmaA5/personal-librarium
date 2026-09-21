@@ -38,6 +38,10 @@ export class BooksService {
     return this.http.get<BookDetail>(this.url(`/books/${id}`));
   }
 
+  getByDriveFileId(driveFileId: string): Observable<BookDetail> {
+    return this.http.get<BookDetail>(this.url(`/books/drive/${driveFileId}`));
+  }
+
   create(dto: CreateBookDto): Observable<BookDetail> {
     return this.http.post<BookDetail>(this.url('/books'), dto);
   }

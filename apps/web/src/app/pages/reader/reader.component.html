@@ -1,0 +1,216 @@
+<div
+  class="reader-shell"
+  [style.background]="bgColors[prefs().background].bg"
+  [style.color]="bgColors[prefs().background].text">
+  <!-- Top bar -->
+  <div class="reader-bar reader-bar--top">
+    <button class="btn-icon" (click)="goBack()" title="Volver">
+      <i class="pi pi-arrow-left"></i>
+    </button>
+    <span class="book-title">{{ bookQuery.data()?.title }}</span>
+    <div class="bar-actions">
+      @if (format() === 'html' && htmlTotalPages() > 0) {
+        <span class="progress-label"
+          >Página {{ htmlCurrentPage() + 1 }} / {{ htmlTotalPages() }} ·
+          {{ percentage() }}%</span
+        >
+      } @else {
+        <span class="progress-label">{{ percentage() }}%</span>
+      }
+      <button class="btn-icon" (click)="toggleConfig($event)" title="Ajustes de lectura">
+        <i class="pi pi-sliders-h"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Config panel -->
+  @if (showConfig()) {
+    <div class="config-panel" #configPanel>
+      <!-- Background -->
+      <div class="config-row">
+        <span class="config-label">Fondo</span>
+        <div class="bg-swatches">
+          @for (bg of backgroundKeys; track bg) {
+            <button
+              class="swatch"
+              [class.active]="prefs().background === bg"
+              [style.background]="bgColors[bg].bg"
+              [style.color]="bgColors[bg].text"
+              [title]="bgLabels[bg]"
+              (click)="setBackground(bg)">
+              {{ bgLabels[bg][0] }}
+            </button>
+          }
+        </div>
+      </div>
+
+      <!-- Font size -->
+      <div class="config-row">
+        <span class="config-label">Tamaño</span>
+        <div class="font-controls">
+          <button class="btn-sm" (click)="decreaseFontSize()">A−</button>
+          <span>{{ prefs().fontSize }}px</span>
+          <button class="btn-sm" (click)="increaseFontSize()">A+</button>
+        </div>
+      </div>
+
+      <!-- Font family -->
+      <div class="config-section">
+        <span class="config-label">Fuente</span>
+        <div class="font-options">
+          @for (font of fonts; track font.name) {
+            <div
+              class="font-option"
+              [class.active]="prefs().fontFamily === font.name"
+              [style.font-family]="font.stack"
+              (click)="setFont(font.name)">
+              {{ font.name }}
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Line height -->
+      <div class="config-row">
+        <span class="config-label">Interlineado</span>
+        <div class="lh-options">
+          @for (lh of lineHeights; track lh.value) {
+            <button
+              class="btn-sm"
+              [class.active]="prefs().lineHeight === lh.value"
+              (click)="setLineHeight(lh.value)">
+              {{ lh.label }}
+            </button>
+          }
+        </div>
+      </div>
+
+      <!-- Page transition -->
+      <div class="config-row">
+        <span class="config-label">Transición</span>
+        <div class="lh-options">
+          <button
+            class="btn-sm"
+            [class.active]="prefs().transition === 'none'"
+            (click)="setTransition('none')">
+            Sin animación
+          </button>
+          <button
+            class="btn-sm"
+            [class.active]="prefs().transition === 'fade'"
+            (click)="setTransition('fade')">
+            Fade suave
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Content area -->
+  <div class="reader-content">
+    @if (isLoading()) {
+      <div class="reader-loading">
+        <i class="pi pi-spinner pi-spin"></i>
+        <span>Cargando...</span>
+      </div>
+    } @else if (error()) {
+      <div class="reader-error">
+        <i class="pi pi-exclamation-triangle"></i>
+        <p>{{ error() }}</p>
+        <button class="btn-primary" (click)="goBack()">Volver</button>
+      </div>
+    } @else if (format() === 'epub') {
+      <div #epubContainer class="epub-container"></div>
+      <div class="nav-arrows">
+        <button class="nav-btn" (click)="epubPrev()">
+          <i class="pi pi-chevron-left"></i>
+        </button>
+        <button class="nav-btn" (click)="epubNext()">
+          <i class="pi pi-chevron-right"></i>
+        </button>
+      </div>
+    } @else if (format() === 'pdf') {
+      <iframe
+        [src]="iframeUrl()"
+        class="book-frame"
+        frameborder="0"
+        allowfullscreen></iframe>
+    } @else if (format() === 'html') {
+      <div class="reader-viewport" #viewport (click)="onContentClick($event)">
+        <!-- CSS-columns container: grows horizontally, slides via translateX -->
+        <div
+          #columns
+          class="reader-columns"
+          [class.no-transition]="prefs().transition === 'none'"
+          [style.font-family]="prefs().fontFamily + ', serif'"
+          [style.font-size.px]="prefs().fontSize"
+          [style.line-height]="prefs().lineHeight"
+          [style.color]="bgColors[prefs().background].text"
+          [innerHTML]="sanitizedHtml()"></div>
+
+        <!-- Side arrow buttons (hover-reveal) -->
+        <button
+          class="html-arrow-btn html-arrow-btn--left"
+          [disabled]="htmlCurrentPage() === 0"
+          (click)="$event.stopPropagation(); prevPage()"
+          title="Página anterior">
+          <i class="pi pi-chevron-left"></i>
+        </button>
+        <button
+          class="html-arrow-btn html-arrow-btn--right"
+          [disabled]="htmlCurrentPage() === htmlTotalPages() - 1"
+          (click)="$event.stopPropagation(); nextPage()"
+          title="Página siguiente">
+          <i class="pi pi-chevron-right"></i>
+        </button>
+      </div>
+    } @else if (format() === 'cbz') {
+      <div class="cbz-viewer">
+        @if (cbzImages().length > 0) {
+          <img
+            [src]="cbzImages()[cbzPage()]"
+            class="cbz-image"
+            alt="Página {{ cbzPage() + 1 }}" />
+          <div class="cbz-nav">
+            <button class="nav-btn" (click)="cbzPrev()" [disabled]="cbzPage() === 0">
+              <i class="pi pi-chevron-left"></i>
+            </button>
+            <span class="page-indicator"
+              >{{ cbzPage() + 1 }} / {{ cbzImages().length }}</span
+            >
+            <button
+              class="nav-btn"
+              (click)="cbzNext()"
+              [disabled]="cbzPage() === cbzImages().length - 1">
+              <i class="pi pi-chevron-right"></i>
+            </button>
+          </div>
+        }
+      </div>
+    }
+  </div>
+
+  <!-- Resume dialog -->
+  @if (showResumeDialog()) {
+    <div class="resume-overlay">
+      <div class="resume-dialog">
+        <h3>Continuar lectura</h3>
+        @if (format() === 'html') {
+          <p>
+            Tienes progreso guardado en la página
+            {{ (resumePosition()?.currentPage ?? 0) + 1 }}
+            de {{ htmlTotalPages() }} ({{ resumePosition()?.percentage ?? 0 }}%).
+          </p>
+        } @else {
+          <p>Tienes progreso guardado al {{ resumePosition()?.percentage ?? 0 }}%.</p>
+        }
+        <div class="resume-actions">
+          <button class="btn-primary" (click)="resumeFromProgress()">Continuar</button>
+          <button class="btn-ghost" (click)="startFromBeginning()">
+            Empezar desde el principio
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+</div>

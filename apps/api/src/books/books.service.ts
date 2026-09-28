@@ -1,4 +1,12 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  NotImplementedException,
+  NotFoundException,
+} from '@nestjs/common';
+import { createReadStream } from 'fs';
+import { stat } from 'fs/promises';
+import { basename, join } from 'path';
 import { and, asc, desc, eq, getTableColumns, inArray, like, or, sql } from 'drizzle-orm';
 import { DRIZZLE } from '../db/database.module';
 import type { DrizzleClient } from '../db/index';
@@ -336,6 +344,49 @@ export class BooksService {
     if (!found)
       throw new NotFoundException(`Book with driveFileId ${driveFileId} not found`);
     return this.findOne(found.id);
+  }
+
+  async getReadContent(id: number) {
+    const bookDetail = await this.findOne(id);
+    const streamUrl = `/api/books/${id}/read/stream`;
+    return { format: bookDetail.format, streamUrl, book: bookDetail };
+  }
+
+  async streamFile(id: number) {
+    const [found] = await this.db
+      .select({ cachedPath: book.cachedPath, format: book.format, title: book.title })
+      .from(book)
+      .where(eq(book.id, id))
+      .limit(1);
+
+    if (!found) throw new NotFoundException(`Book ${id} not found`);
+
+    if (!found.cachedPath) {
+      throw new NotImplementedException('Google Drive streaming not yet implemented');
+    }
+
+    // cachedPath is stored as a URL path (e.g. /uploads/html/file.html).
+    // Resolve it to the actual filesystem path using the same base as main.ts static assets.
+    const fsPath = found.cachedPath.startsWith('/')
+      ? join(process.cwd(), found.cachedPath)
+      : found.cachedPath;
+
+    await stat(fsPath).catch(() => {
+      throw new NotFoundException(`File not found on disk: ${fsPath}`);
+    });
+
+    const mimeTypes: Record<string, string> = {
+      epub: 'application/epub+zip',
+      pdf: 'application/pdf',
+      html: 'text/html',
+      cbz: 'application/zip',
+    };
+
+    return {
+      stream: createReadStream(fsPath),
+      mimeType: mimeTypes[found.format ?? 'epub'] ?? 'application/octet-stream',
+      filename: basename(fsPath),
+    };
   }
 
   async getCover(id: number) {

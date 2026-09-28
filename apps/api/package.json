@@ -94,7 +94,8 @@
         },
         "configurations": {
           "development": {
-            "buildTarget": "@librarium/api:build:development"
+            "buildTarget": "@librarium/api:build:development",
+            "watch": true
           },
           "production": {
             "buildTarget": "@librarium/api:build:production"

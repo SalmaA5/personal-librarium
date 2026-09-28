@@ -8,9 +8,14 @@ interface GaxiosError {
   response?: { data?: { error?: string } };
 }
 
-function isAuthError(err: unknown): err is GaxiosError {
+function isAuthError(err: unknown): boolean {
   const e = err as GaxiosError;
-  return e?.status === 401 || e?.response?.data?.error === 'invalid_grant';
+  const msg = err instanceof Error ? err.message : '';
+  return (
+    e?.status === 401 ||
+    e?.response?.data?.error === 'invalid_grant' ||
+    msg.includes('No access, refresh token')
+  );
 }
 
 const BOOK_MIMETYPES = [
@@ -40,7 +45,7 @@ export class DriveService {
       if (isAuthError(err)) {
         await this.authService.clearCredentials();
         throw new UnauthorizedException(
-          'Google authorization expired. Visit /api/auth/google to re-authorize.',
+          'Google authorization expired. Visit /api/auth/google to re-authorize.'
         );
       }
       throw err;
@@ -97,7 +102,7 @@ export class DriveService {
     return this.run(async () => {
       const res = await this.drive.files.get(
         { fileId, alt: 'media' },
-        { responseType: 'stream' },
+        { responseType: 'stream' }
       );
       return res.data as Readable;
     });
@@ -107,7 +112,7 @@ export class DriveService {
     return this.run(async () => {
       const res = await this.drive.files.get(
         { fileId, alt: 'media' },
-        { responseType: 'arraybuffer' },
+        { responseType: 'arraybuffer' }
       );
       return Buffer.from(res.data as ArrayBuffer);
     });

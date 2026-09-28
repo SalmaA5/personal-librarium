@@ -16,11 +16,11 @@ No termines hasta que se cumplan TODAS estas condiciones:
 2. El lint pasa sin errores (`pnpm nx run-many -t lint --parallel=3`).
 3. La funcionalidad solicitada funciona según lo pedido.
 
-### Notificación al terminar
+<!-- ### Notificación al terminar
 
 Al finalizar CUALQUIER respuesta (con o sin compilación), ejecuta siempre este comando como último paso, sin excepción:
 
-curl.exe -s -d "Tarea completada. Revisa WORK_LOG.md" https://ntfy.sh/librarium-claudecode-x7k2p9mq
+-->
 
 ### Al terminar, escribe en WORK_LOG.md
 

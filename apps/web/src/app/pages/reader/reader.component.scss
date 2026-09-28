@@ -1,0 +1,472 @@
+:host {
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+
+.reader-shell {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transition: background 0.2s;
+}
+
+.reader-bar {
+  display: flex;
+  align-items: center;
+  height: 48px;
+  flex-shrink: 0;
+  padding: 0 1rem;
+  gap: 0.75rem;
+  background: rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(8px);
+
+  &--top {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+}
+
+.book-title {
+  flex: 1;
+  font-size: 0.9rem;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  opacity: 0.9;
+}
+
+.bar-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.progress-label {
+  font-size: 0.8rem;
+  opacity: 0.6;
+  min-width: 2.5rem;
+  text-align: right;
+}
+
+.btn-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.1);
+  color: inherit;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+}
+
+// ─── Config panel — always dark regardless of reader theme ───────────────────
+
+.config-panel {
+  position: absolute;
+  top: 52px;
+  right: 1rem;
+  z-index: 100;
+  background: #1a2830;
+  color: #d0e8f0;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  min-width: 220px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+}
+
+.config-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.config-label {
+  color: #8ba8b8;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+.config-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.bg-swatches {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.swatch {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  font-size: 0.6rem;
+  font-weight: 600;
+  transition: border-color 0.15s;
+
+  &.active {
+    border-color: rgba(255, 255, 255, 0.8);
+  }
+
+  &:hover {
+    opacity: 0.85;
+  }
+}
+
+.font-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: #d0e8f0;
+}
+
+.font-options {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.font-option {
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #d0e8f0;
+  transition: background 0.15s;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  &.active {
+    background: #223540;
+    color: #88b8c8;
+  }
+}
+
+.lh-options {
+  display: flex;
+  gap: 0.35rem;
+}
+
+.btn-sm {
+  padding: 0.25rem 0.5rem;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+  color: #d0e8f0;
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: background 0.12s;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.16);
+  }
+
+  &.active {
+    background: #223540;
+    border-color: #88b8c8;
+    color: #88b8c8;
+  }
+}
+
+// ─── Layout ───────────────────────────────────────────────────────────────────
+
+.reader-content {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.reader-loading,
+.reader-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  height: 100%;
+  opacity: 0.7;
+
+  i {
+    font-size: 2rem;
+  }
+}
+
+.epub-container {
+  width: 100%;
+  height: 100%;
+}
+
+.nav-arrows {
+  position: absolute;
+  bottom: 1.5rem;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 1rem;
+  pointer-events: none;
+}
+
+.nav-btn {
+  pointer-events: all;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(0, 0, 0, 0.4);
+  color: inherit;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s;
+
+  &:hover:not(:disabled) {
+    background: rgba(0, 0, 0, 0.6);
+  }
+
+  &:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+}
+
+.book-frame {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+// ─── HTML reader: CSS-columns pagination ─────────────────────────────────────
+
+// Viewport: clips horizontal overflow; arrows positioned relative to this
+.reader-viewport {
+  position: relative;
+  flex: 1;
+  overflow: hidden;
+  cursor: pointer;
+  user-select: none;
+}
+
+// Columns container: fixed width (set in JS) so CSS creates exactly 1 column
+// per "page". Content flows into column 2, 3… horizontally.
+// We slide left via translateX(--page-offset) to reveal each column.
+.reader-columns {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  column-fill: auto;
+  padding: 2rem 0;
+  box-sizing: border-box;
+  transform: translateX(var(--page-offset, 0px));
+  transition: transform 0.2s ease;
+
+  &.no-transition {
+    transition: none;
+  }
+
+  ::ng-deep {
+    p {
+      margin: 0 0 1em;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4 {
+      margin: 1.5em 0 0.5em;
+      font-weight: 600;
+    }
+
+    em,
+    i {
+      font-style: italic;
+    }
+    strong,
+    b {
+      font-weight: 600;
+    }
+
+    a {
+      color: inherit;
+      opacity: 0.75;
+      text-decoration: none;
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+  }
+}
+
+// Side arrow buttons — hidden by default, appear on hover
+.html-arrow-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(4px);
+  color: inherit;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition:
+    opacity 0.2s,
+    background 0.15s;
+  pointer-events: none;
+
+  &--left {
+    left: 0.75rem;
+  }
+  &--right {
+    right: 0.75rem;
+  }
+
+  &:not(:disabled) {
+    pointer-events: all;
+  }
+  &:disabled {
+    cursor: not-allowed;
+  }
+}
+
+.reader-viewport:hover .html-arrow-btn:not(:disabled) {
+  opacity: 1;
+}
+
+.html-arrow-btn:hover:not(:disabled) {
+  background: rgba(0, 0, 0, 0.55);
+}
+
+// ─── CBZ viewer ──────────────────────────────────────────────────────────────
+
+.cbz-viewer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+}
+
+.cbz-image {
+  flex: 1;
+  max-height: calc(100% - 60px);
+  object-fit: contain;
+  max-width: 100%;
+}
+
+.cbz-nav {
+  height: 60px;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex-shrink: 0;
+}
+
+.page-indicator {
+  font-size: 0.875rem;
+  opacity: 0.7;
+  min-width: 80px;
+  text-align: center;
+}
+
+// ─── Resume dialog ────────────────────────────────────────────────────────────
+
+.resume-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+}
+
+.resume-dialog {
+  background: #1e293b;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 1rem;
+  padding: 2rem;
+  max-width: 380px;
+  width: 90%;
+  text-align: center;
+
+  h3 {
+    margin: 0 0 0.5rem;
+    font-size: 1.1rem;
+  }
+
+  p {
+    opacity: 0.7;
+    font-size: 0.9rem;
+    margin: 0 0 1.5rem;
+  }
+}
+
+.resume-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+.btn-primary {
+  padding: 0.6rem 1.5rem;
+  background: var(--color-accent, #2dd4bf);
+  color: #fff;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: opacity 0.15s;
+
+  &:hover {
+    opacity: 0.88;
+  }
+}
+
+.btn-ghost {
+  padding: 0.5rem 1.5rem;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 0.5rem;
+  color: inherit;
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: background 0.15s;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.08);
+  }
+}

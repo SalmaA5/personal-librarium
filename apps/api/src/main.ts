@@ -18,7 +18,7 @@ async function bootstrap() {
       res: { setHeader: (k: string, v: string) => void },
       next: () => void
     ) => {
-      if (!req.path.includes('/docs')) {
+      if (!req.path.includes('/docs') && !req.path.includes('/read/stream')) {
         res.setHeader('Content-Type', 'application/json; charset=utf-8');
       }
       next();

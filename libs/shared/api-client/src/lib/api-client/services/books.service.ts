@@ -6,6 +6,7 @@ import {
   BookFilters,
   CreateBookDto,
   PaginatedResponse,
+  ReadContent,
   ReadingProgress,
   UpdateBookDto,
   UpdateProgressDto,
@@ -72,5 +73,13 @@ export class BooksService {
 
   resetProgress(bookId: number): Observable<void> {
     return this.http.delete<void>(this.url(`/books/${bookId}/progress`));
+  }
+
+  readBook(id: number): Observable<ReadContent> {
+    return this.http.get<ReadContent>(this.url(`/books/${id}/read`));
+  }
+
+  getStreamUrl(id: number): string {
+    return this.url(`/books/${id}/read/stream`);
   }
 }

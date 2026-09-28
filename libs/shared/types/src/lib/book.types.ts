@@ -124,3 +124,9 @@ export interface UpdateProgressDto {
   epubCfi?: string;
   percentage?: number;
 }
+
+export interface ReadContent {
+  format: BookFormat;
+  streamUrl: string;
+  book: BookDetail;
+}

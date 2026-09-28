@@ -12,7 +12,7 @@
   },
   "sandbox": {
     "network": {
-      "allowedDomains": ["ntfy.sh"]
+      "allowedDomains": []
     }
   }
 }

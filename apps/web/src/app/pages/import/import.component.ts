@@ -1,9 +1,23 @@
-import { Component, computed, effect, inject, OnDestroy, signal } from '@angular/core';
+import {
+  Component,
+  computed,
+  effect,
+  inject,
+  OnDestroy,
+  OnInit,
+  signal,
+} from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
-import { Router } from '@angular/router';
-import { BooksService, DriveService, ImportService } from '@libs/api-client';
+import { ActivatedRoute, Router } from '@angular/router';
+import {
+  BooksService,
+  DriveService,
+  ImportService,
+  API_BASE_URL,
+} from '@libs/api-client';
 import { BookDetail, DriveFile, DriveFolder } from '@libs/types';
 import { FORM_IMPORTS, PRIMENG_IMPORTS, ROUTER_IMPORTS } from '@libs/ui-shared';
+import { MessageService } from 'primeng/api';
 import { injectQuery } from '@tanstack/angular-query-experimental';
 import { debounceTime, firstValueFrom } from 'rxjs';
 
@@ -27,11 +41,14 @@ const IMPORT_STEPS = [
   templateUrl: './import.component.html',
   styleUrl: './import.component.scss',
 })
-export default class ImportComponent implements OnDestroy {
+export default class ImportComponent implements OnInit, OnDestroy {
   private readonly driveService = inject(DriveService);
   private readonly booksService = inject(BooksService);
   private readonly importService = inject(ImportService);
   private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
+  private readonly messageService = inject(MessageService);
+  private readonly apiBase = inject(API_BASE_URL);
 
   readonly STEPS = IMPORT_STEPS;
   readonly skeletonRows = [1, 2, 3];
@@ -65,6 +82,19 @@ export default class ImportComponent implements OnDestroy {
   private readonly checkingIds = new Set<string>();
   private importTimers: ReturnType<typeof setTimeout>[] = [];
 
+  // ── Drive auth ───────────────────────────────────────────────────────────
+  readonly driveUnauthorized = computed(() => {
+    const err =
+      (this.foldersQuery.error() as { status?: number } | null) ??
+      (this.filesQuery.error() as { status?: number } | null) ??
+      (this.searchQuery.error() as { status?: number } | null);
+    return err?.status === 401;
+  });
+
+  connectDrive(): void {
+    window.location.href = `${this.apiBase}/api/auth/google`;
+  }
+
   // ── Queries ──────────────────────────────────────────────────────────────
   readonly foldersQuery = injectQuery(() => ({
     queryKey: ['drive', 'folders', this.currentFolderId()],
@@ -91,6 +121,28 @@ export default class ImportComponent implements OnDestroy {
   readonly displayedFiles = computed(() =>
     this.isSearchMode() ? (this.searchQuery.data() ?? []) : (this.filesQuery.data() ?? [])
   );
+
+  ngOnInit(): void {
+    const auth = this.route.snapshot.queryParamMap.get('auth');
+    if (auth === 'success') {
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Google Drive conectado',
+        detail: 'Ya puedes explorar y importar tus libros',
+        life: 4000,
+      });
+      this.router.navigate([], { replaceUrl: true, queryParams: {} });
+    } else if (auth === 'error') {
+      const msg = this.route.snapshot.queryParamMap.get('message') ?? 'Error desconocido';
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error al conectar Drive',
+        detail: msg,
+        life: 6000,
+      });
+      this.router.navigate([], { replaceUrl: true, queryParams: {} });
+    }
+  }
 
   constructor() {
     // Check import status for every file that appears in the view

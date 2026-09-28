@@ -50,10 +50,23 @@
           }
         </div>
       } @else if (foldersQuery.isError()) {
-        <div class="empty-state">
-          <i class="pi pi-exclamation-triangle"></i>
-          <p>Error al cargar las carpetas de Drive</p>
-        </div>
+        @if (driveUnauthorized()) {
+          <div class="auth-banner">
+            <i class="pi pi-google auth-banner__icon"></i>
+            <div class="auth-banner__text">
+              <strong>Google Drive no conectado</strong>
+              <span>Autoriza el acceso para explorar e importar tus libros</span>
+            </div>
+            <button class="btn-connect" (click)="connectDrive()">
+              <i class="pi pi-link"></i> Conectar Drive
+            </button>
+          </div>
+        } @else {
+          <div class="empty-state">
+            <i class="pi pi-exclamation-triangle"></i>
+            <p>Error al cargar las carpetas de Drive</p>
+          </div>
+        }
       } @else if (!foldersQuery.data()?.length && !currentFolderId()) {
         <div class="empty-state">
           <i class="pi pi-folder-open"></i>
@@ -129,10 +142,23 @@
           }
         </div>
       } @else if (searchQuery.isError()) {
-        <div class="empty-state">
-          <i class="pi pi-exclamation-triangle"></i>
-          <p>Error al buscar en Drive</p>
-        </div>
+        @if (driveUnauthorized()) {
+          <div class="auth-banner">
+            <i class="pi pi-google auth-banner__icon"></i>
+            <div class="auth-banner__text">
+              <strong>Google Drive no conectado</strong>
+              <span>Autoriza el acceso para buscar tus libros</span>
+            </div>
+            <button class="btn-connect" (click)="connectDrive()">
+              <i class="pi pi-link"></i> Conectar Drive
+            </button>
+          </div>
+        } @else {
+          <div class="empty-state">
+            <i class="pi pi-exclamation-triangle"></i>
+            <p>Error al buscar en Drive</p>
+          </div>
+        }
       } @else if (!searchQuery.data()?.length) {
         <div class="empty-state">
           <i class="pi pi-search"></i>

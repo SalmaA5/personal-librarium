@@ -14,7 +14,7 @@ const SCOPE = 'https://www.googleapis.com/auth/drive.readonly';
 
 @Injectable()
 export class AuthService implements OnModuleInit {
-  private readonly logger = new Logger(AuthService.name);
+  private readonly logger = new Logger('AuthService');
   readonly oauth2Client: InstanceType<typeof google.auth.OAuth2>;
 
   constructor(
@@ -64,6 +64,10 @@ export class AuthService implements OnModuleInit {
     });
   }
 
+  getWebBaseUrl(): string {
+    return this.config.get<string>('WEB_BASE_URL', 'http://localhost:4200');
+  }
+
   async handleCallback(code: string): Promise<void> {
     const { tokens } = await this.oauth2Client.getToken(code);
     this.oauth2Client.setCredentials(tokens);
@@ -97,25 +101,16 @@ export class AuthService implements OnModuleInit {
   }
 
   private async saveTokens(tokens: Credentials): Promise<void> {
-    const existing = await this.db
-      .select()
-      .from(appConfig)
-      .where(eq(appConfig.key, TOKENS_KEY));
-
     const merged: Credentials = { ...this.oauth2Client.credentials, ...tokens };
     const value = JSON.stringify(merged);
+    const updatedAt = new Date().toISOString();
 
-    if (existing.length > 0) {
-      await this.db
-        .update(appConfig)
-        .set({ value, updatedAt: new Date().toISOString() })
-        .where(eq(appConfig.key, TOKENS_KEY));
-    } else {
-      await this.db.insert(appConfig).values({
-        key: TOKENS_KEY,
-        value,
-        updatedAt: new Date().toISOString(),
+    await this.db
+      .insert(appConfig)
+      .values({ key: TOKENS_KEY, value, updatedAt })
+      .onConflictDoUpdate({
+        target: appConfig.key,
+        set: { value, updatedAt },
       });
-    }
   }
 }

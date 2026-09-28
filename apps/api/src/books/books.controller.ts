@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Header,
   HttpCode,
   HttpStatus,
   Param,
@@ -10,7 +11,10 @@ import {
   Patch,
   Post,
   Query,
+  Res,
+  StreamableFile,
 } from '@nestjs/common';
+import type { Response } from 'express';
 import {
   ApiCreatedResponse,
   ApiNoContentResponse,
@@ -42,6 +46,29 @@ export class BooksController {
   @ApiNotFoundResponse({ description: 'Book not found' })
   findByDriveFileId(@Param('driveFileId') driveFileId: string) {
     return this.booksService.findByDriveFileId(driveFileId);
+  }
+
+  @Get(':id/read')
+  @ApiOperation({ summary: 'Get read content info for a book' })
+  @ApiOkResponse({ description: 'Read content info with stream URL' })
+  @ApiNotFoundResponse({ description: 'Book not found' })
+  getReadContent(@Param('id', ParseIntPipe) id: number) {
+    return this.booksService.getReadContent(id);
+  }
+
+  @Get(':id/read/stream')
+  @ApiOperation({ summary: 'Stream book file from local cache or Google Drive' })
+  @Header('Cache-Control', 'no-cache')
+  async streamFile(
+    @Param('id', ParseIntPipe) id: number,
+    @Res({ passthrough: true }) res: Response
+  ) {
+    const { stream, mimeType, filename } = await this.booksService.streamFile(id);
+    res.set({
+      'Content-Type': mimeType,
+      'Content-Disposition': `inline; filename="${filename}"`,
+    });
+    return new StreamableFile(stream);
   }
 
   @Get(':id')
